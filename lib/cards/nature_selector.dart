@@ -88,6 +88,7 @@ class NatureSelectorPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var types = ["ATK", "DEF", "SP.A", "SP.D", "SPD"];
     return Scaffold(
       appBar: AppBar(
         title: const Text("Select Nature"),
@@ -110,6 +111,33 @@ class NatureSelectorPage extends StatelessWidget {
                   ? const Icon(Icons.radio_button_checked)
                   : const Icon(Icons.radio_button_unchecked),
               title: Text(natureNames[index].name),
+              trailing: index == 0
+                  ? null
+                  : Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        for (var i = 0; i < 5; i++)
+                          Container(
+                            decoration: BoxDecoration(
+                              color: natures[natureNames[index].id][i] > 1
+                                  ? Colors.green
+                                  : natures[natureNames[index].id][i] < 1
+                                      ? Colors.red
+                                      : null,
+                            ),
+                            padding: const EdgeInsets.all(4),
+                            child: Text(
+                              types[i],
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color: natures[natureNames[index].id][i] == 1
+                                      ? Colors.black
+                                      : Colors.white),
+                            ),
+                          ),
+                      ],
+                    ),
               onTap: () {
                 state.setNewNature(natureNames[index].id);
                 Navigator.pop(context);

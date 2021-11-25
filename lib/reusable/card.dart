@@ -19,7 +19,7 @@ class SelectionCard extends StatelessWidget {
       children: [
         SliverPinnedHeader(
           child: Container(
-              margin: const EdgeInsets.only(right: 24, left: 24, top: 8),
+              margin: const EdgeInsets.only(right: 16, left: 16, top: 8),
               padding: const EdgeInsets.only(top: 4),
               decoration: BoxDecoration(
                 color: color ?? Colors.black.withAlpha(40),
@@ -32,7 +32,7 @@ class SelectionCard extends StatelessWidget {
         SliverClip(
           child: SliverToBoxAdapter(
             child: Container(
-                margin: const EdgeInsets.only(right: 24, left: 24, bottom: 8),
+                margin: const EdgeInsets.only(right: 16, left: 16, bottom: 8),
                 padding: const EdgeInsets.only(bottom: 8),
                 decoration: BoxDecoration(
                   color: color ?? Colors.black.withAlpha(40),
