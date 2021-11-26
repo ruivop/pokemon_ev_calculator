@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:pokemon_ev_calculator/reusable/card.dart';
+import 'package:provider/provider.dart';
+
+import '../state.dart';
 
 class LevelSelector extends StatefulWidget {
   final LevelSelectorController? controller;
@@ -26,7 +29,10 @@ class _LevelSelectorState extends State<LevelSelector> {
   @override
   void initState() {
     super.initState();
-    controller = widget.controller ?? LevelSelectorController();
+    controller = widget.controller ??
+        LevelSelectorController(
+            currentLevel:
+                Provider.of<CalculationState>(context, listen: false).pkmLvl);
     pageController = PageController(
       initialPage: controller.currentLevel - widget.nimLevel,
       viewportFraction: 0.3,
@@ -72,6 +78,8 @@ class _LevelSelectorState extends State<LevelSelector> {
                 setState(() {
                   controller.currentLevel = index + widget.nimLevel;
                 });
+                Provider.of<CalculationState>(context, listen: false)
+                    .setNewLevel(index + widget.nimLevel);
               },
               itemBuilder: (context, index) {
                 return Container(
@@ -113,6 +121,8 @@ class _LevelSelectorState extends State<LevelSelector> {
               controller.currentLevel = value.toInt();
               pageController.jumpToPage(value.toInt() - widget.nimLevel);
               setState(() {});
+              Provider.of<CalculationState>(context, listen: false)
+                  .setNewLevel(value.toInt());
             },
           )
         ],

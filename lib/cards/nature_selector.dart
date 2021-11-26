@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pokemon_ev_calculator/data/stats.dart';
 import 'package:pokemon_ev_calculator/reusable/card.dart';
 import 'package:pokemon_ev_calculator/state.dart';
@@ -89,13 +90,15 @@ class NatureSelectorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var types = ["ATK", "DEF", "SP.A", "SP.D", "SPD"];
+    var luminance = backgroundColor.computeLuminance();
     return Scaffold(
       appBar: AppBar(
         title: const Text("Select Nature"),
         backgroundColor: backgroundColor,
-        foregroundColor: backgroundColor.computeLuminance() > 0.5
-            ? Colors.black
-            : Colors.white,
+        foregroundColor: luminance > 0.5 ? Colors.black : Colors.white,
+        systemOverlayStyle: luminance > 0.5
+            ? SystemUiOverlayStyle.dark
+            : SystemUiOverlayStyle.light,
       ),
       body: Consumer<CalculationState>(
         builder: (context, state, child) => ListView.builder(

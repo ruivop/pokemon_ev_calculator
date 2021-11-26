@@ -7,10 +7,16 @@ import 'package:provider/provider.dart';
 
 import '../state.dart';
 
-class StatsSelector extends StatelessWidget {
-  final Color textColor = Colors.white;
-
+class StatsSelector extends StatefulWidget {
   const StatsSelector({Key? key}) : super(key: key);
+
+  @override
+  State<StatsSelector> createState() => _StatsSelectorState();
+}
+
+class _StatsSelectorState extends State<StatsSelector> {
+  final Color textColor = Colors.white;
+  List<FocusNode> focusNodes = List<FocusNode>.generate(13, (i) => FocusNode());
 
   @override
   Widget build(BuildContext context) {
@@ -78,92 +84,135 @@ class StatsSelector extends StatelessWidget {
           )
         ],
       ),
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 8),
-        decoration: BoxDecoration(
-          border: Border(
-            right: mainBorderSide,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
+          FocusScope.of(context).requestFocus(focusNodes[12]);
+        },
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 8),
+          decoration: BoxDecoration(
+            border: Border(
+              right: mainBorderSide,
+            ),
           ),
-        ),
-        child: Consumer<CalculationState>(
-          builder: (context, state, child) => Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TableRow(
-                  tableTitle: "Nature Efect",
-                  children: [
-                    TableCell(
-                      content: "",
-                      mainDecoration: mainDecoration,
-                      textColor: textColor,
-                    ),
-                    ...natures[state.pkmNature ?? 1]
-                        .map((multiplier) => TableCell(
-                              content:
-                                  multiplier == 1 ? "-" : multiplier.toString(),
-                              mainDecoration: mainDecoration,
-                              textColor: textColor,
-                            ))
-                        .toList()
-                  ],
-                  mainDecoration: mainDecoration,
-                  textColor: textColor),
-              TableRow(
-                  tableTitle: "Base Stats",
-                  children: [
-                    ...state.selectedPokemon.baseStats
-                        .map((statVal) => TableCell(
-                              content: statVal.toString(),
-                              mainDecoration: mainDecoration,
-                              textColor: textColor,
-                            ))
-                        .toList()
-                  ],
-                  mainDecoration: mainDecoration,
-                  textColor: textColor),
-              TableRow(
-                  tableTitle: "Effort Points",
-                  children: [
-                    ...state.selectedPokemon.efortPoints
-                        .map((ep) => TableCell(
-                              content: ep == 0 ? "" : ep.toString(),
-                              mainDecoration: mainDecoration,
-                              textColor: textColor,
-                            ))
-                        .toList()
-                  ],
-                  mainDecoration: mainDecoration,
-                  textColor: textColor),
-              TableRow(
-                  tableTitle: "IVs",
-                  children: [
-                    ...state.selectedPokemon.efortPoints
-                        .map((ep) => TableCellEditable(
-                              mainDecoration: mainDecoration,
-                              textColor: textColor,
-                            ))
-                        .toList()
-                  ],
-                  mainDecoration: mainDecoration,
-                  textColor: textColor),
-              TableRow(
-                  tableTitle: "Result EVs",
-                  children: [
-                    ...state.selectedPokemon.efortPoints
-                        .map((ep) => TableCell(
-                              content: ep == 0 ? "" : ep.toString(),
-                              mainDecoration: mainDecoration,
-                              textColor: textColor,
-                            ))
-                        .toList()
-                  ],
-                  mainDecoration: mainDecoration,
-                  textColor: textColor)
-            ],
+          child: Consumer<CalculationState>(
+            builder: (context, state, child) => Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TableRow(
+                    tableTitle: "Nature Efect",
+                    children: [
+                      TableCell(
+                        content: "",
+                        mainDecoration: mainDecoration,
+                        textColor: textColor,
+                      ),
+                      ...natures[state.pkmNature == null || state.pkmNature == 0
+                              ? 1
+                              : state.pkmNature!]
+                          .map((multiplier) => TableCell(
+                                content: multiplier == 1
+                                    ? "-"
+                                    : multiplier.toString(),
+                                mainDecoration: mainDecoration,
+                                textColor: textColor,
+                              ))
+                          .toList()
+                    ],
+                    mainDecoration: mainDecoration,
+                    textColor: textColor),
+                TableRow(
+                    tableTitle: "Base Stats",
+                    children: [
+                      ...state.selectedPokemon.baseStats
+                          .map((statVal) => TableCell(
+                                content: statVal.toString(),
+                                mainDecoration: mainDecoration,
+                                textColor: textColor,
+                              ))
+                          .toList()
+                    ],
+                    mainDecoration: mainDecoration,
+                    textColor: textColor),
+                TableRow(
+                    tableTitle: "Effort Points",
+                    children: [
+                      ...state.selectedPokemon.efortPoints
+                          .map((ep) => TableCell(
+                                content: ep == 0 ? "" : ep.toString(),
+                                mainDecoration: mainDecoration,
+                                textColor: textColor,
+                              ))
+                          .toList()
+                    ],
+                    mainDecoration: mainDecoration,
+                    textColor: textColor),
+                TableRow(
+                    tableTitle: "Stats",
+                    children: [
+                      for (var i = 0; i < 6; i++)
+                        TableCellEditable(
+                          mainDecoration: mainDecoration,
+                          textColor: textColor,
+                          focusNode: focusNodes[i],
+                          nextFocusNode: focusNodes[i + 1],
+                          onSubmitted: (value) {
+                            var newValue = int.tryParse(value);
+                            Provider.of<CalculationState>(context,
+                                    listen: false)
+                                .setStat(i, newValue);
+                          },
+                        )
+                    ],
+                    mainDecoration: mainDecoration,
+                    textColor: textColor),
+                TableRow(
+                    tableTitle: "IVs",
+                    children: [
+                      for (var i = 6; i < 12; i++)
+                        TableCellEditable(
+                          mainDecoration: mainDecoration,
+                          textColor: textColor,
+                          focusNode: focusNodes[i],
+                          nextFocusNode: focusNodes[i + 1],
+                          onSubmitted: (value) {
+                            var newValue = int.tryParse(value);
+                            Provider.of<CalculationState>(context,
+                                    listen: false)
+                                .setIV(i - 6, newValue);
+                          },
+                        )
+                    ],
+                    mainDecoration: mainDecoration,
+                    textColor: textColor),
+                TableRow(
+                    tableTitle: "Result EVs",
+                    children: [
+                      ...state.resultEVs
+                          .map((ep) => TableCell(
+                                content: ep,
+                                mainDecoration: mainDecoration,
+                                textColor: textColor,
+                              ))
+                          .toList()
+                    ],
+                    mainDecoration: mainDecoration,
+                    textColor: textColor)
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    for (var node in focusNodes) {
+      node.dispose();
+    }
+    super.dispose();
   }
 }
 
@@ -245,10 +294,16 @@ class TableCellEditable extends StatefulWidget {
     Key? key,
     required this.mainDecoration,
     required this.textColor,
+    required this.focusNode,
+    required this.nextFocusNode,
+    required this.onSubmitted,
   }) : super(key: key);
 
   final BoxDecoration mainDecoration;
   final Color textColor;
+  final FocusNode focusNode;
+  final FocusNode nextFocusNode;
+  final void Function(String value) onSubmitted;
 
   @override
   State<TableCellEditable> createState() => _TableCellEditableState();
@@ -256,19 +311,19 @@ class TableCellEditable extends StatefulWidget {
 
 class _TableCellEditableState extends State<TableCellEditable> {
   late TextEditingController controller;
-  late FocusNode focusNode;
 
   @override
   void initState() {
     super.initState();
     controller = TextEditingController();
-    focusNode = FocusNode();
-    focusNode.addListener(() {
-      if (focusNode.hasFocus) {
-        controller.selection =
-            TextSelection(baseOffset: 0, extentOffset: controller.text.length);
-      }
-    });
+    widget.focusNode.addListener(onSelection);
+  }
+
+  void onSelection() {
+    if (widget.focusNode.hasFocus) {
+      controller.selection =
+          TextSelection(baseOffset: 0, extentOffset: controller.text.length);
+    }
   }
 
   @override
@@ -281,15 +336,21 @@ class _TableCellEditableState extends State<TableCellEditable> {
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
             child: TextField(
-              focusNode: focusNode,
+              focusNode: widget.focusNode,
               controller: controller,
               textAlign: TextAlign.center,
               maxLength: 3,
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.phone, // TextInputType.number,
               maxLengthEnforcement: MaxLengthEnforcement.none,
               inputFormatters: <TextInputFormatter>[
                 FilteringTextInputFormatter.digitsOnly
               ],
+              onSubmitted: (value) {
+                if (value.isNotEmpty) {
+                  FocusScope.of(context).requestFocus(widget.nextFocusNode);
+                }
+                widget.onSubmitted(value);
+              },
               decoration: const InputDecoration(
                 contentPadding: EdgeInsets.all(5),
                 border: OutlineInputBorder(),
@@ -307,7 +368,7 @@ class _TableCellEditableState extends State<TableCellEditable> {
   @override
   void dispose() {
     controller.dispose();
-    focusNode.dispose();
+    widget.focusNode.removeListener(onSelection);
     super.dispose();
   }
 }
