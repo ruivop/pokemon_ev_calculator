@@ -16,12 +16,13 @@ class PokemonSearchPage extends StatefulWidget {
 class _PokemonSearchPageState extends State<PokemonSearchPage> {
   List<Species> searchResults = [];
   FocusNode searchFocusNode = FocusNode();
-  ScrollController scrollController = ScrollController();
+  late ScrollController scrollController;
 
   @override
   void initState() {
     super.initState();
     searchResults = allSpecies.entries.map((e) => e.value).toList();
+    scrollController = ScrollController();
   }
 
   @override
@@ -43,7 +44,7 @@ class _PokemonSearchPageState extends State<PokemonSearchPage> {
                 decoration: const InputDecoration(
                   contentPadding: EdgeInsets.all(0.0),
                   border: OutlineInputBorder(),
-                  hintText: 'Pokemon Name or Number',
+                  hintText: 'Species Name or Number',
                   prefixIcon: Icon(
                     Icons.search,
                   ),
@@ -94,8 +95,13 @@ class _PokemonSearchPageState extends State<PokemonSearchPage> {
               itemCount: searchResults.length,
               separatorBuilder: (context, index) => const Divider(),
               itemBuilder: (context, index) => ListTile(
-                leading: Text(searchResults[index].number),
+                leading: SizedBox(
+                    width: 25,
+                    child: Center(child: Text(searchResults[index].number))),
                 title: Text(searchResults[index].name),
+                subtitle: searchResults[index].variantName == null
+                    ? null
+                    : Text(searchResults[index].variantName!),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [

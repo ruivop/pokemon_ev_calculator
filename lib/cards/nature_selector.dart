@@ -24,7 +24,7 @@ class NatureSelector extends StatelessWidget {
               margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
               alignment: Alignment.centerLeft,
               child: Text(
-                "Select Nature",
+                "Select Nature/Mint",
                 style: TextStyle(
                   color: Colors.white.withAlpha(150),
                 ),

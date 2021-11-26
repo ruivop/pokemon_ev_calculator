@@ -55,7 +55,7 @@ class _LevelSelectorState extends State<LevelSelector> {
               margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
               alignment: Alignment.centerLeft,
               child: Text(
-                "Select Pokemon Level",
+                "Select Level",
                 style: TextStyle(
                   color: Colors.white.withAlpha(150),
                 ),

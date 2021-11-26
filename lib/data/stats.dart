@@ -72,8 +72,9 @@ String getNatureNameById(int id) {
   return natureNames.firstWhere((element) => element.id == id).name;
 }
 
+//DOES NOT INCLUDE FAIRY
 //Type affinity no fg fl po gu ro bu gh st ?? fi wa gs el ps ic dr da
-List<List<double>> damage = [
+/*List<List<double>> damage = [
   [1, 1, 1, 1, 1, 0.5, 1, 0, 0.5, 1, 1, 1, 1, 1, 1, 1, 1, 1],
   [2, 1, 0.5, 0.5, 1, 2, 0.5, 0, 2, 1, 1, 1, 1, 1, 0.5, 2, 1, 2],
   [1, 2, 1, 1, 1, 0.5, 2, 1, 0.5, 1, 1, 1, 2, 0.5, 1, 1, 1, 1],
@@ -92,7 +93,7 @@ List<List<double>> damage = [
   [1, 1, 2, 1, 2, 1, 1, 1, 0.5, 1, 0.5, 0.5, 2, 1, 1, 0.5, 2, 1],
   [1, 1, 1, 1, 1, 1, 1, 1, 0.5, 1, 1, 1, 1, 1, 1, 1, 2, 1],
   [1, 0.5, 1, 1, 1, 1, 1, 2, 0.5, 1, 1, 1, 1, 1, 2, 1, 1, 0.5]
-];
+];*/
 
 List<double> ivr = [
   0,
@@ -128,7 +129,7 @@ List<double> ivr = [
   30,
   31
 ];
-
+/*
 List<String> stats = [
   'HP',
   'Attack',
@@ -137,7 +138,7 @@ List<String> stats = [
   'Sp.Defense',
   'Speed',
   '&mdash;'
-];
+];*/
 List<String> types = [
   'Normal',
   'Fighting',
@@ -156,7 +157,8 @@ List<String> types = [
   'Psychic',
   'Ice',
   'Dragon',
-  'Dark'
+  'Dark',
+  'Fairy'
 ];
 
 List<Color> typesColors = const [
@@ -177,9 +179,11 @@ List<Color> typesColors = const [
   Color(0xFFFA92B2), //'Psychic',
   Color(0xFFBCE6E6), //'Ice',
   Color(0xFFA27DFA), //'Dragon',
-  Color(0xFFA29288), //'Dark'
+  Color(0xFFA29288), //'Dark',
+  Color(0xFFF4BDC9), //'Fairy'
 ];
 
+/*
 List<String> eggs = [
   '???',
   'Monster',
@@ -234,3 +238,4 @@ List<String> hps = [
   '59,60,61,62',
   '63'
 ]; //possible Hidden Power "types"
+*/

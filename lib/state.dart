@@ -19,9 +19,7 @@ class CalculationState extends ChangeNotifier {
   }
 
   initializeValues() {
-    selectedPokemon = allSpecies["4"] ??
-        Species(
-            "-1", "Error", [0, 0, 0, 0, 0, 0], 0, 0, 0, 0, [0, 0, 0, 0, 0, 0]);
+    selectedPokemon = allSpecies.entries.first.value;
     pkmNature = null;
     pkmLvl = 50;
     pkmStats = [null, null, null, null, null, null];
@@ -69,7 +67,7 @@ class CalculationState extends ChangeNotifier {
 
     if (errors.isEmpty) {
       resultEVs = getEVs(
-        selectedPokemon.number,
+        selectedPokemon.id,
         pkmLvl,
         pkmNature!,
         pkmStats.map((e) => e ?? 0).toList(),

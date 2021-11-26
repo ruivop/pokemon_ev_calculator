@@ -114,7 +114,7 @@ class _StatsSelectorState extends State<StatsSelector> {
                           .map((multiplier) => TableCell(
                                 content: multiplier == 1
                                     ? "-"
-                                    : multiplier.toString(),
+                                    : "x" + multiplier.toString(),
                                 mainDecoration: mainDecoration,
                                 textColor: textColor,
                               ))
@@ -135,7 +135,7 @@ class _StatsSelectorState extends State<StatsSelector> {
                     ],
                     mainDecoration: mainDecoration,
                     textColor: textColor),
-                TableRow(
+                /*TableRow(
                     tableTitle: "Effort Points",
                     children: [
                       ...state.selectedPokemon.efortPoints
@@ -147,7 +147,7 @@ class _StatsSelectorState extends State<StatsSelector> {
                           .toList()
                     ],
                     mainDecoration: mainDecoration,
-                    textColor: textColor),
+                    textColor: textColor),*/
                 TableRow(
                     tableTitle: "Stats",
                     children: [
@@ -157,7 +157,7 @@ class _StatsSelectorState extends State<StatsSelector> {
                           textColor: textColor,
                           focusNode: focusNodes[i],
                           nextFocusNode: focusNodes[i + 1],
-                          onSubmitted: (value) {
+                          onChanged: (value) {
                             var newValue = int.tryParse(value);
                             Provider.of<CalculationState>(context,
                                     listen: false)
@@ -176,7 +176,7 @@ class _StatsSelectorState extends State<StatsSelector> {
                           textColor: textColor,
                           focusNode: focusNodes[i],
                           nextFocusNode: focusNodes[i + 1],
-                          onSubmitted: (value) {
+                          onChanged: (value) {
                             var newValue = int.tryParse(value);
                             Provider.of<CalculationState>(context,
                                     listen: false)
@@ -296,14 +296,14 @@ class TableCellEditable extends StatefulWidget {
     required this.textColor,
     required this.focusNode,
     required this.nextFocusNode,
-    required this.onSubmitted,
+    required this.onChanged,
   }) : super(key: key);
 
   final BoxDecoration mainDecoration;
   final Color textColor;
   final FocusNode focusNode;
   final FocusNode nextFocusNode;
-  final void Function(String value) onSubmitted;
+  final void Function(String value) onChanged;
 
   @override
   State<TableCellEditable> createState() => _TableCellEditableState();
@@ -349,7 +349,9 @@ class _TableCellEditableState extends State<TableCellEditable> {
                 if (value.isNotEmpty) {
                   FocusScope.of(context).requestFocus(widget.nextFocusNode);
                 }
-                widget.onSubmitted(value);
+              },
+              onChanged: (value) {
+                widget.onChanged(value);
               },
               decoration: const InputDecoration(
                 contentPadding: EdgeInsets.all(5),
