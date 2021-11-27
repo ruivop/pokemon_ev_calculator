@@ -1,90 +1,102 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pokemon_ev_calculator/data/pokemons.dart';
 import 'package:pokemon_ev_calculator/data/stats.dart';
 import 'package:pokemon_ev_calculator/reusable/card.dart';
 import 'package:pokemon_ev_calculator/state.dart';
 import 'package:provider/provider.dart';
 
 class NatureSelector extends StatelessWidget {
-  const NatureSelector({Key? key}) : super(key: key);
+  final Species selectedPokemon;
+  final int? natureIndex;
+  final void Function(int) onNatureChanged;
+  const NatureSelector({
+    Key? key,
+    required this.selectedPokemon,
+    required this.natureIndex,
+    required this.onNatureChanged,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SelectionCard(
-        header: Row(
-          children: [
-            const SizedBox(width: 16),
-            Icon(
-              CupertinoIcons.leaf_arrow_circlepath,
-              color: Colors.white.withAlpha(150),
-              size: 16,
-            ),
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "Select Nature/Mint",
-                style: TextStyle(
-                  color: Colors.white.withAlpha(150),
-                ),
-              ),
-            ),
-          ],
-        ),
-        child: Consumer<CalculationState>(
-          builder: (context, state, child) => SizedBox(
-            height: 80,
-            child: Center(
-              child: SizedBox(
-                width: 200,
-                height: 50,
-                child: OutlinedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) =>
-                          ChangeNotifierProvider<CalculationState>.value(
-                              value: state,
-                              child: NatureSelectorPage(
-                                  backgroundColor:
-                                      state.selectedPokemon.getColorType1())),
-                    ));
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (state.pkmNature == null || state.pkmNature == 0)
-                        const Icon(Icons.warning_rounded, color: Colors.amber),
-                      Expanded(
-                        child: Center(
-                          child: Text(
-                              state.pkmNature == null || state.pkmNature == 0
-                                  ? "Select Nature"
-                                  : getNatureNameById(state.pkmNature!),
-                              style: const TextStyle(fontSize: 22)),
-                        ),
-                      ),
-                    ],
-                  ),
-                  style: OutlinedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50.0),
-                    ),
-                    backgroundColor: Colors.white.withAlpha(220),
-                  ),
-                ),
+      header: Row(
+        children: [
+          const SizedBox(width: 16),
+          Icon(
+            CupertinoIcons.leaf_arrow_circlepath,
+            color: Colors.white.withAlpha(150),
+            size: 16,
+          ),
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "Select Nature/Mint",
+              style: TextStyle(
+                color: Colors.white.withAlpha(150),
               ),
             ),
           ),
-        ));
+        ],
+      ),
+      child: SizedBox(
+        height: 80,
+        child: Center(
+          child: SizedBox(
+            width: 200,
+            height: 50,
+            child: OutlinedButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => NatureSelectorPage(
+                      natureIndex: natureIndex,
+                      onNatureChanged: onNatureChanged,
+                      backgroundColor: selectedPokemon.getColorType1()),
+                ));
+              },
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (natureIndex == null || natureIndex == 0)
+                    const Icon(Icons.warning_rounded, color: Colors.amber),
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                          natureIndex == null || natureIndex == 0
+                              ? "Select Nature"
+                              : getNatureNameById(natureIndex!),
+                          style: const TextStyle(fontSize: 22)),
+                    ),
+                  ),
+                ],
+              ),
+              style: OutlinedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50.0),
+                ),
+                backgroundColor: Colors.white.withAlpha(220),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 
 class NatureSelectorPage extends StatelessWidget {
   final Color backgroundColor;
+
+  final int? natureIndex;
+  final void Function(int) onNatureChanged;
+
   const NatureSelectorPage({
     Key? key,
     required this.backgroundColor,
+    required this.natureIndex,
+    required this.onNatureChanged,
   }) : super(key: key);
 
   @override
@@ -100,60 +112,58 @@ class NatureSelectorPage extends StatelessWidget {
             ? SystemUiOverlayStyle.dark
             : SystemUiOverlayStyle.light,
       ),
-      body: Consumer<CalculationState>(
-        builder: (context, state, child) => ListView.builder(
-          itemCount: natureNames.length,
-          itemBuilder: (context, index) => Container(
-            color: isSelected(index, state)
-                ? backgroundColor.withAlpha(100)
-                : index % 2 == 0
-                    ? Colors.white
-                    : Colors.grey.withAlpha(10),
-            child: ListTile(
-              leading: isSelected(index, state)
-                  ? const Icon(Icons.radio_button_checked)
-                  : const Icon(Icons.radio_button_unchecked),
-              title: Text(natureNames[index].name),
-              trailing: index == 0
-                  ? null
-                  : Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        for (var i = 0; i < 5; i++)
-                          Container(
-                            decoration: BoxDecoration(
-                              color: natures[natureNames[index].id][i] > 1
-                                  ? Colors.green
-                                  : natures[natureNames[index].id][i] < 1
-                                      ? Colors.red
-                                      : null,
-                            ),
-                            padding: const EdgeInsets.all(4),
-                            child: Text(
-                              types[i],
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  color: natures[natureNames[index].id][i] == 1
-                                      ? Colors.black
-                                      : Colors.white),
-                            ),
+      body: ListView.builder(
+        itemCount: natureNames.length,
+        itemBuilder: (context, index) => Container(
+          color: isSelected(index, natureIndex)
+              ? backgroundColor.withAlpha(100)
+              : index % 2 == 0
+                  ? Colors.white
+                  : Colors.grey.withAlpha(10),
+          child: ListTile(
+            leading: isSelected(index, natureIndex)
+                ? const Icon(Icons.radio_button_checked)
+                : const Icon(Icons.radio_button_unchecked),
+            title: Text(natureNames[index].name),
+            trailing: index == 0
+                ? null
+                : Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      for (var i = 0; i < 5; i++)
+                        Container(
+                          decoration: BoxDecoration(
+                            color: natures[natureNames[index].id][i] > 1
+                                ? Colors.green
+                                : natures[natureNames[index].id][i] < 1
+                                    ? Colors.red
+                                    : null,
                           ),
-                      ],
-                    ),
-              onTap: () {
-                state.setNewNature(natureNames[index].id);
-                Navigator.pop(context);
-              },
-            ),
+                          padding: const EdgeInsets.all(4),
+                          child: Text(
+                            types[i],
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: natures[natureNames[index].id][i] == 1
+                                    ? Colors.black
+                                    : Colors.white),
+                          ),
+                        ),
+                    ],
+                  ),
+            onTap: () {
+              onNatureChanged(natureNames[index].id);
+              Navigator.pop(context);
+            },
           ),
         ),
       ),
     );
   }
 
-  bool isSelected(int index, CalculationState state) {
-    return (state.pkmNature == null && index == 0) ||
-        (state.pkmNature != null && state.pkmNature == natureNames[index].id);
+  bool isSelected(int index, int? stateNatureIndex) {
+    return (stateNatureIndex == null && index == 0) ||
+        (stateNatureIndex != null && stateNatureIndex == natureNames[index].id);
   }
 }

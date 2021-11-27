@@ -38,6 +38,8 @@ dependencies:
   provider: ^6.0.1
   draggable_scrollbar: ^0.1.0
   wakelock: ^0.5.6
+  auto_size_text: ^3.0.0
+  numberpicker: ^2.1.1
 
 dev_dependencies:
   flutter_test:
@@ -62,8 +64,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  #assets:
-  #  - resources/sample.jpeg
+  assets:
+    - resources/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

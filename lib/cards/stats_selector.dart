@@ -125,7 +125,7 @@ class _StatsSelectorState extends State<StatsSelector> {
                 TableRow(
                     tableTitle: "Base Stats",
                     children: [
-                      ...state.selectedPokemon.baseStats
+                      ...state.selectedSpecies.baseStats
                           .map((statVal) => TableCell(
                                 content: statVal.toString(),
                                 mainDecoration: mainDecoration,

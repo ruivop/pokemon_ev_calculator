@@ -4,7 +4,7 @@ import 'package:pokemon_ev_calculator/utils.dart';
 import 'data/pokemons.dart';
 
 class CalculationState extends ChangeNotifier {
-  late Species selectedPokemon;
+  late Species selectedSpecies;
   int? pkmNature;
   int pkmLvl = 50;
   List<int?> pkmStats = [null, null, null, null, null, null];
@@ -19,7 +19,7 @@ class CalculationState extends ChangeNotifier {
   }
 
   initializeValues() {
-    selectedPokemon = allSpecies.entries.first.value;
+    selectedSpecies = allSpecies.entries.first.value;
     pkmNature = null;
     pkmLvl = 50;
     pkmStats = [null, null, null, null, null, null];
@@ -34,12 +34,13 @@ class CalculationState extends ChangeNotifier {
   }
 
   setNewLevel(int newLevel) {
+    if (newLevel == pkmLvl) return;
     pkmLvl = newLevel;
     calculateEVs();
   }
 
-  setNewPokeon(Species newPokemon) {
-    selectedPokemon = newPokemon;
+  setNewSpecies(Species newPokemon) {
+    selectedSpecies = newPokemon;
     calculateEVs();
   }
 
@@ -67,7 +68,7 @@ class CalculationState extends ChangeNotifier {
 
     if (errors.isEmpty) {
       resultEVs = getEVs(
-        selectedPokemon.id,
+        selectedSpecies.id,
         pkmLvl,
         pkmNature!,
         pkmStats.map((e) => e ?? 0).toList(),

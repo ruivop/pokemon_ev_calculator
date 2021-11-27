@@ -7,7 +7,11 @@ import 'package:provider/provider.dart';
 import '../state.dart';
 
 class PokemonSearchPage extends StatefulWidget {
-  const PokemonSearchPage({Key? key}) : super(key: key);
+  final void Function(Species) onSelect;
+  const PokemonSearchPage({
+    Key? key,
+    required this.onSelect,
+  }) : super(key: key);
 
   @override
   State<PokemonSearchPage> createState() => _PokemonSearchPageState();
@@ -56,7 +60,11 @@ class _PokemonSearchPageState extends State<PokemonSearchPage> {
                             e.value.name
                                 .toLowerCase()
                                 .contains(value.toLowerCase()) ||
-                            e.value.number.toString().contains(value))
+                            e.value.number.toString().contains(value) ||
+                            (e.value.variantName != null &&
+                                e.value.variantName!
+                                    .toLowerCase()
+                                    .contains(value.toLowerCase())))
                         .map((e) => e.value)
                         .toList();
                   });
@@ -114,8 +122,7 @@ class _PokemonSearchPageState extends State<PokemonSearchPage> {
                   ],
                 ),
                 onTap: () {
-                  Provider.of<CalculationState>(context, listen: false)
-                      .setNewPokeon(searchResults[index]);
+                  widget.onSelect(searchResults[index]);
                   Navigator.pop(context);
                 },
               ),

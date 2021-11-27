@@ -1,44 +1,34 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:numberpicker/numberpicker.dart';
 import 'package:pokemon_ev_calculator/reusable/card.dart';
 import 'package:provider/provider.dart';
 
 import '../state.dart';
 
 class LevelSelector extends StatefulWidget {
-  final LevelSelectorController? controller;
   final int nimLevel;
   final int maxLevel;
+
+  final int level;
+  final void Function(int) onLevelChanged;
   const LevelSelector({
     Key? key,
-    this.controller,
     this.nimLevel = 1,
     this.maxLevel = 100,
+    required this.level,
+    required this.onLevelChanged,
   }) : super(key: key);
 
   @override
-  _LevelSelectorState createState() => _LevelSelectorState();
+  State<LevelSelector> createState() => _LevelSelectorState();
 }
 
 class _LevelSelectorState extends State<LevelSelector> {
-  late LevelSelectorController controller;
-
-  late PageController pageController;
-
-  @override
-  void initState() {
-    super.initState();
-    controller = widget.controller ??
-        LevelSelectorController(
-            currentLevel:
-                Provider.of<CalculationState>(context, listen: false).pkmLvl);
-    pageController = PageController(
-      initialPage: controller.currentLevel - widget.nimLevel,
-      viewportFraction: 0.3,
-    );
-  }
-
+  bool isChangingBottom = false;
   @override
   Widget build(BuildContext context) {
     return SelectionCard(
@@ -69,71 +59,53 @@ class _LevelSelectorState extends State<LevelSelector> {
         children: [
           SizedBox(
             height: 80,
-            child: PageView.builder(
-              dragStartBehavior: DragStartBehavior.down,
-              controller: pageController,
-              itemCount: widget.maxLevel - widget.nimLevel + 1,
-              onPageChanged: (int index) {
-                if (index + widget.nimLevel == controller.currentLevel) return;
-                setState(() {
-                  controller.currentLevel = index + widget.nimLevel;
-                });
-                Provider.of<CalculationState>(context, listen: false)
-                    .setNewLevel(index + widget.nimLevel);
-              },
-              itemBuilder: (context, index) {
-                return Container(
-                  decoration:
-                      controller.currentLevel == (index + widget.nimLevel)
-                          ? BoxDecoration(
-                              color: Colors.grey.withAlpha(100),
-                              border: Border.all(
-                                color: Colors.white.withAlpha(150),
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.circular(8),
-                            )
-                          : null,
-                  child: Center(
-                    child: Text(
-                      (index + widget.nimLevel)
-                          .toString(), //controller.currentLevel.toString(),
-                      style: TextStyle(
-                        fontSize:
-                            controller.currentLevel == (index + widget.nimLevel)
-                                ? 50
-                                : 40,
-                        color: Colors.white,
-                      ),
-                    ),
+            child: NumberPicker(
+                value: widget.level,
+                minValue: widget.nimLevel,
+                maxValue: widget.maxLevel,
+                onChanged: (value) {
+                  if (!isChangingBottom) {
+                    widget.onLevelChanged(value);
+                  }
+                },
+                axis: Axis.horizontal,
+                textStyle: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+                selectedTextStyle: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 40,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.grey.withAlpha(100),
+                  border: Border.all(
+                    color: Colors.white.withAlpha(150),
+                    width: 2,
                   ),
-                );
-              },
-            ),
+                  borderRadius: BorderRadius.circular(8),
+                )),
           ),
           Slider(
             activeColor: Colors.white,
             inactiveColor: Colors.white.withAlpha(150),
             min: widget.nimLevel.toDouble(),
             max: widget.maxLevel.toDouble(),
-            value: controller.currentLevel.toDouble(),
+            value: widget.level.toDouble(),
+            onChangeStart: (value) {
+              isChangingBottom = true;
+            },
+            onChangeEnd: (value) {
+              Timer(const Duration(milliseconds: 500), () {
+                isChangingBottom = false;
+              });
+            },
             onChanged: (value) {
-              controller.currentLevel = value.toInt();
-              pageController.jumpToPage(value.toInt() - widget.nimLevel);
-              setState(() {});
-              Provider.of<CalculationState>(context, listen: false)
-                  .setNewLevel(value.toInt());
+              widget.onLevelChanged(value.round());
             },
           )
         ],
       ),
     );
   }
-}
-
-class LevelSelectorController {
-  int currentLevel;
-  LevelSelectorController({
-    this.currentLevel = 50,
-  });
 }
