@@ -15,6 +15,7 @@ class CalculationState extends ChangeNotifier {
 
   late List<String> resultIVs;
   late List<String> resultEVs;
+  late List<String> resultStats;
 
   late List<String> errors;
 
@@ -28,8 +29,10 @@ class CalculationState extends ChangeNotifier {
     pkmLvl = 50;
     pkmStats = [null, null, null, null, null, null];
     pkmIVs = [null, null, null, null, null, null];
+    pkmEVs = [0, 0, 0, 0, 0, 0];
     resultIVs = ["", "", "", "", "", ""];
     resultEVs = ["", "", "", "", "", ""];
+    resultStats = ["", "", "", "", "", ""];
     errors = [];
     _calculate();
   }
@@ -65,6 +68,11 @@ class CalculationState extends ChangeNotifier {
     _calculate();
   }
 
+  setEV(int ivIndex, int? newValue) {
+    pkmEVs[ivIndex] = newValue;
+    _calculate();
+  }
+
   _calculate() {
     if (calculationType == null) return;
     if (calculationType == CalculationType.EV) {
@@ -88,23 +96,88 @@ class CalculationState extends ChangeNotifier {
       errors.add("Please select all IVs.");
     }
 
-    if (errors.isEmpty) {
-      resultEVs = getEVs(
-        selectedSpecies.id,
-        pkmLvl,
-        pkmNature!,
-        pkmStats.map((e) => e ?? 0).toList(),
-        pkmIVs.map((e) => e ?? 0).toList(),
-      ).map((e) => e.toString()).toList();
-    } else {
-      resultEVs = ["", "", "", "", "", ""];
-    }
+    int natureToUse = pkmNature == null || pkmNature == 0 ? 1 : pkmNature!;
+
+    resultEVs = getEVs(
+      selectedSpecies.id,
+      pkmLvl,
+      natureToUse,
+      pkmStats,
+      pkmIVs,
+    );
+
+    errors.addAll(validateStats(
+      selectedSpecies.id,
+      pkmLvl,
+      natureToUse,
+      pkmStats,
+      resultEVs.map((e) => int.tryParse(e)).toList(),
+    ));
+    errors.addAll(validateIVs(pkmIVs));
+    errors.addAll(validateEVs(resultEVs.map((e) => int.tryParse(e)).toList()));
+
     notifyListeners();
   }
 
-  _calculateIvs() {}
+  _calculateIvs() {
+    errors.clear();
+    if (pkmNature == null || pkmNature == 0) {
+      errors.add("Please select a nature.");
+    }
+    if (pkmStats.any((stat) => stat == null)) {
+      errors.add("Please select all stats.");
+    }
+    if (pkmEVs.any((ev) => ev == null)) {
+      errors.add("Please select all EVs.");
+    }
 
-  _calculateStats() {}
+    int natureToUse = pkmNature == null || pkmNature == 0 ? 1 : pkmNature!;
+
+    errors.addAll(validateStats(
+      selectedSpecies.id,
+      pkmLvl,
+      natureToUse,
+      pkmStats,
+      pkmEVs,
+    ));
+    errors.addAll(validateEVs(pkmEVs));
+
+    resultIVs = getIVs(
+      selectedSpecies.id,
+      pkmLvl,
+      natureToUse,
+      pkmStats,
+      pkmEVs,
+    ).map((e) => e.join(",\n")).toList();
+    notifyListeners();
+  }
+
+  _calculateStats() {
+    errors.clear();
+    if (pkmNature == null || pkmNature == 0) {
+      errors.add("Please select a nature.");
+    }
+    if (pkmIVs.any((iv) => iv == null)) {
+      errors.add("Please select all IVs.");
+    }
+    if (pkmEVs.any((ev) => ev == null)) {
+      errors.add("Please select all EVs.");
+    }
+
+    int natureToUse = pkmNature == null || pkmNature == 0 ? 1 : pkmNature!;
+
+    errors.addAll(validateIVs(pkmIVs));
+    errors.addAll(validateEVs(pkmEVs));
+
+    resultStats = getStats(
+      selectedSpecies.id,
+      pkmLvl,
+      natureToUse,
+      pkmIVs,
+      pkmEVs,
+    );
+    notifyListeners();
+  }
 }
 
 enum CalculationType {

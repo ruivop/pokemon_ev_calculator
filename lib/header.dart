@@ -10,12 +10,16 @@ import 'state.dart';
 class Header extends StatelessWidget {
   final void Function(Species) onSpeciesChange;
   final void Function() onClear;
+  final void Function() onProblemsBadgeClick;
   final Species selectedSpecies;
+  final int errorCount;
   const Header({
     Key? key,
     required this.onSpeciesChange,
     required this.selectedSpecies,
     required this.onClear,
+    required this.onProblemsBadgeClick,
+    required this.errorCount,
   }) : super(key: key);
 
   @override
@@ -23,7 +27,12 @@ class Header extends StatelessWidget {
     return SliverPersistentHeader(
       pinned: true,
       delegate: ChoosingPokemonPageHeaderDelagate(
-          onSpeciesChange, selectedSpecies, onClear),
+        onSpeciesChange,
+        selectedSpecies,
+        onClear,
+        onProblemsBadgeClick,
+        errorCount,
+      ),
     );
   }
 }
@@ -35,8 +44,15 @@ class ChoosingPokemonPageHeaderDelagate extends SliverPersistentHeaderDelegate {
   final void Function(Species) onSpeciesChange;
   final Species selectedSpecies;
   final void Function() onClear;
+  final void Function() onProblemsBadgeClick;
+  final int errorCount;
   const ChoosingPokemonPageHeaderDelagate(
-      this.onSpeciesChange, this.selectedSpecies, this.onClear);
+    this.onSpeciesChange,
+    this.selectedSpecies,
+    this.onClear,
+    this.onProblemsBadgeClick,
+    this.errorCount,
+  );
 
   @override
   Widget build(
@@ -53,163 +69,208 @@ class ChoosingPokemonPageHeaderDelagate extends SliverPersistentHeaderDelegate {
       ],
     );
     bool isSmall = shrinkOffset > maxAppBarSize - 100;
-    return GestureDetector(
-      onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => PokemonSearchPage(onSelect: onSpeciesChange),
-        ));
-      },
-      child: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(
-          color: Color.lerp(selectedSpecies.getColorType1(), Colors.white, 0.5),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              spreadRadius: 5,
-            ),
-          ],
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 60,
-              child: Center(
-                child: IconButton(
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: () => Navigator.of(context).pop(),
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) =>
+                  PokemonSearchPage(onSelect: onSpeciesChange),
+            ));
+          },
+          child: Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: BoxDecoration(
+              color: Color.lerp(
+                  selectedSpecies.getColorType1(), Colors.white, 0.5),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 10,
+                  spreadRadius: 5,
                 ),
-              ),
+              ],
             ),
-            Expanded(
-              child: isSmall
-                  ? SizedBox(
-                      height: double.infinity,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            selectedSpecies.number,
-                            textAlign: TextAlign.center,
-                            style: textStyle,
-                          ),
-                          const SizedBox(width: 16),
-                          Column(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 60,
+                  child: Center(
+                    child: IconButton(
+                      icon: const Icon(Icons.arrow_back),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: isSmall
+                      ? SizedBox(
+                          height: double.infinity,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Expanded(
-                                flex: 2,
-                                child: Align(
-                                  alignment: selectedSpecies.variantName != null
-                                      ? Alignment.bottomCenter
-                                      : Alignment.center,
-                                  child: Text(
-                                    selectedSpecies.name,
-                                    textAlign: TextAlign.center,
-                                    style: textStyle,
-                                  ),
-                                ),
+                              Text(
+                                selectedSpecies.number,
+                                textAlign: TextAlign.center,
+                                style: textStyle,
                               ),
-                              if (selectedSpecies.variantName != null)
-                                Expanded(
-                                  flex: 1,
-                                  child: Center(
-                                    child: Text(
-                                      selectedSpecies.variantName!,
-                                      textAlign: TextAlign.center,
-                                      style: textStyle.copyWith(
-                                        fontSize: 14,
+                              const SizedBox(width: 16),
+                              Column(
+                                children: [
+                                  Expanded(
+                                    flex: 2,
+                                    child: Align(
+                                      alignment:
+                                          selectedSpecies.variantName != null
+                                              ? Alignment.bottomCenter
+                                              : Alignment.center,
+                                      child: Text(
+                                        selectedSpecies.name,
+                                        textAlign: TextAlign.center,
+                                        style: textStyle,
                                       ),
                                     ),
                                   ),
-                                ),
+                                  if (selectedSpecies.variantName != null)
+                                    Expanded(
+                                      flex: 1,
+                                      child: Center(
+                                        child: Text(
+                                          selectedSpecies.variantName!,
+                                          textAlign: TextAlign.center,
+                                          style: textStyle.copyWith(
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                              /*const SizedBox(width: 4),
+                              const Icon(
+                                Icons.refresh,
+                                size: 12,
+                              ),*/
                             ],
                           ),
-                          const SizedBox(width: 4),
-                          const Icon(
-                            Icons.refresh,
-                            size: 12,
-                          ),
-                        ],
-                      ),
-                    )
-                  : Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          selectedSpecies.number,
-                          textAlign: TextAlign.center,
-                          style: textStyle,
-                        ),
-                        Row(
+                        )
+                      : Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              selectedSpecies.name,
+                              selectedSpecies.number,
                               textAlign: TextAlign.center,
                               style: textStyle,
                             ),
-                            const SizedBox(width: 4),
-                            const Icon(Icons.refresh),
-                          ],
-                        ),
-                        if (selectedSpecies.variantName != null)
-                          Text(
-                            selectedSpecies.variantName!,
-                            textAlign: TextAlign.center,
-                            style: textStyle.copyWith(
-                                fontSize: textStyle.fontSize! * 0.5),
-                          ),
-                      ],
-                    ),
-            ),
-            SizedBox(
-              height: 60,
-              child: Center(
-                child: IconButton(
-                  icon: const Icon(Icons.more_vert),
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: const SizedBox(
-                          width: double.infinity,
-                          child: Text('Options', textAlign: TextAlign.center),
-                        ),
-                        actionsAlignment: MainAxisAlignment.center,
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            SizedBox(
-                              width: 100,
-                              child: OutlinedButton(
-                                child: const Text('Clear'),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                  onClear();
-                                },
-                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  selectedSpecies.name,
+                                  textAlign: TextAlign.center,
+                                  style: textStyle,
+                                ),
+                                const SizedBox(width: 4),
+                                const Icon(Icons.refresh),
+                              ],
                             ),
+                            if (selectedSpecies.variantName != null)
+                              Text(
+                                selectedSpecies.variantName!,
+                                textAlign: TextAlign.center,
+                                style: textStyle.copyWith(
+                                    fontSize: textStyle.fontSize! * 0.5),
+                              ),
                           ],
                         ),
-                        actions: [
-                          OutlinedButton(
-                            child: const Text('Cancel',
-                                style: TextStyle(color: Colors.red)),
-                            onPressed: () => Navigator.of(context).pop(),
+                ),
+                SizedBox(
+                  height: 60,
+                  child: Center(
+                    child: IconButton(
+                      icon: const Icon(Icons.more_vert),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const SizedBox(
+                              width: double.infinity,
+                              child:
+                                  Text('Options', textAlign: TextAlign.center),
+                            ),
+                            actionsAlignment: MainAxisAlignment.center,
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SizedBox(
+                                  width: 100,
+                                  child: OutlinedButton(
+                                    child: const Text('Clear'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                      onClear();
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              OutlinedButton(
+                                child: const Text('Cancel',
+                                    style: TextStyle(color: Colors.red)),
+                                onPressed: () => Navigator.of(context).pop(),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Positioned(
+          top: isSmall ? 12.5 : null,
+          bottom: isSmall ? null : 8,
+          right: isSmall ? 30 : 8,
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
+              onProblemsBadgeClick();
+            },
+            child: AnimatedContainer(
+                duration: const Duration(milliseconds: 100),
+                height: errorCount == 0 ? 0 : 35,
+                padding:
+                    const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.7),
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: errorCount == 0
+                    ? null
+                    : Row(
+                        children: [
+                          const Icon(Icons.warning_rounded,
+                              color: Colors.amber),
+                          const SizedBox(width: 4),
+                          Text(
+                            errorCount.toString(),
+                            style: const TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.amber),
                           ),
                         ],
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ],
+                      )),
+          ),
         ),
-      ),
+      ],
     );
   }
 

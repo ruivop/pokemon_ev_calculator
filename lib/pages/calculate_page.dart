@@ -10,8 +10,17 @@ import 'package:sliver_tools/sliver_tools.dart';
 import '../header.dart';
 import '../state.dart';
 
-class CalculateEVPage extends StatelessWidget {
-  const CalculateEVPage({Key? key}) : super(key: key);
+var problemsCardKey = GlobalKey();
+
+class CalculatePage extends StatefulWidget {
+  const CalculatePage({Key? key}) : super(key: key);
+
+  @override
+  State<CalculatePage> createState() => _CalculatePageState();
+}
+
+class _CalculatePageState extends State<CalculatePage> {
+  final ScrollController controller = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +34,7 @@ class CalculateEVPage extends StatelessWidget {
               child: SafeArea(
                 child: Container(
                   child: CustomScrollView(
+                    controller: controller,
                     slivers: [
                       Header(
                         selectedSpecies: state.selectedSpecies,
@@ -33,6 +43,16 @@ class CalculateEVPage extends StatelessWidget {
                         },
                         onClear: () {
                           state.initializeValues();
+                        },
+                        errorCount: state.errors.length,
+                        onProblemsBadgeClick: () {
+                          if (problemsCardKey.currentContext != null) {
+                            problemsCardKey.currentContext!
+                                .findRenderObject()!
+                                .showOnScreen(
+                                    duration: const Duration(milliseconds: 500),
+                                    curve: Curves.easeInOut);
+                          }
                         },
                       ),
                       SliverClip(
@@ -49,34 +69,10 @@ class CalculateEVPage extends StatelessWidget {
                                 state.setNewNature(nature);
                               }),
                           const EVTableSelector(),
-                          ProblemsCard(errors: state.errors),
-                          /*for (var i = 0; i < 10; i++)
-                    SelectionCard(
-                      header: Row(
-                        children: [
-                          Icon(
-                            CupertinoIcons.slider_horizontal_below_rectangle,
-                            color: Colors.white.withAlpha(150),
-                            size: 16,
+                          ProblemsCard(
+                            key: problemsCardKey,
+                            errors: state.errors,
                           ),
-                          Container(
-                            margin: const EdgeInsets.symmetric(
-                                vertical: 8, horizontal: 4),
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "HOURLY FORECAST",
-                              style: TextStyle(
-                                color: Colors.white.withAlpha(150),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      child: Container(
-                        width: double.infinity,
-                        height: 100,
-                      ),
-                    ),*/
                         ]),
                       ),
                     ],
@@ -100,5 +96,11 @@ class CalculateEVPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 }

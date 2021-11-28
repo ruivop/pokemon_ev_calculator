@@ -1,17 +1,42 @@
 import 'data/pokemons.dart';
 import 'data/stats.dart';
 
-List<int> getEVs(int pkmId, int pkmLvl, int pkmNature, List<int> pkmStats,
-    List<int> pkmIvs) {
-  List<int> evs = [];
+List<String> getStats(int pkmId, int pkmLvl, int pkmNature, List<int?> pkmIVs,
+    List<int?> pkmEVs) {
+  List<String> evs = [];
   for (int statIndex = 0; statIndex < 6; statIndex++) {
-    int ev = 0;
-    for (int testEvIndex = 0; testEvIndex < 256; testEvIndex++) {
-      if (calcStat(pkmId, statIndex, pkmIvs[statIndex], testEvIndex, pkmLvl,
-              pkmNature) ==
-          pkmStats[statIndex]) {
-        ev = testEvIndex;
-        break;
+    String stat = "";
+    if (pkmIVs[statIndex] != null && pkmEVs[statIndex] != null) {
+      stat = calcStat(
+        pkmId,
+        statIndex,
+        pkmIVs[statIndex]!,
+        pkmEVs[statIndex]!,
+        pkmLvl,
+        pkmNature,
+      ).toString();
+    }
+    evs.add(stat);
+  }
+  return evs;
+}
+
+List<String> getEVs(int pkmId, int pkmLvl, int pkmNature, List<int?> pkmStats,
+    List<int?> pkmIvs) {
+  List<String> evs = [];
+  for (int statIndex = 0; statIndex < 6; statIndex++) {
+    String ev = "";
+    if (pkmStats[statIndex] != null && pkmIvs[statIndex] != null) {
+      for (int testEvIndex = 0; testEvIndex < 256; testEvIndex++) {
+        if (calcStat(pkmId, statIndex, pkmIvs[statIndex]!, testEvIndex, pkmLvl,
+                pkmNature) ==
+            pkmStats[statIndex]) {
+          ev = testEvIndex.toString();
+          break;
+        }
+      }
+      if (ev.isEmpty) {
+        ev = "?";
       }
     }
     evs.add(ev);
@@ -48,14 +73,17 @@ int calcStat(
   return result;
 }
 
-List<List<int>> getIVs(int speciesId, int pkmLvl, int pkmNature,
-    List<int> pkmStats, List<int> pkmEvs) {
-  //validate IVs
+List<String> validateStats(int speciesId, int pkmLvl, int pkmNature,
+    List<int?> pkmStats, List<int?> pkmEvs) {
+  List<String> errors = [];
   for (var i = 0; i < 6; i++) {
-    var min = calcStat(speciesId, i, 0, pkmEvs[i], pkmLvl, pkmNature);
-    var max = calcStat(speciesId, i, 31, pkmEvs[i], pkmLvl, pkmNature);
-    if (pkmStats[i] < min || pkmStats[i] > max) {
-      throw MException("Invalid " +
+    if (pkmStats[i] == null) {
+      continue;
+    }
+    var min = calcStat(speciesId, i, 0, pkmEvs[i] ?? 0, pkmLvl, pkmNature);
+    var max = calcStat(speciesId, i, 31, pkmEvs[i] ?? 255, pkmLvl, pkmNature);
+    if (pkmStats[i]! < min || pkmStats[i]! > max) {
+      errors.add("Invalid " +
           statNames[i] +
           " stat. Must be between " +
           min.toString() +
@@ -63,12 +91,20 @@ List<List<int>> getIVs(int speciesId, int pkmLvl, int pkmNature,
           max.toString());
     }
   }
+  return errors;
+}
 
+List<List<int>> getIVs(int speciesId, int pkmLvl, int pkmNature,
+    List<int?> pkmStats, List<int?> pkmEvs) {
   List<List<int>> ivs = [];
   //Calculate IVs
   for (var i = 0; i < 6; i++) {
+    if (pkmStats[i] == null || pkmEvs[i] == null) {
+      ivs.add([]);
+      continue;
+    }
     var result =
-        calcStativ(speciesId, i, pkmStats[i], pkmEvs[i], pkmLvl, pkmNature);
+        calcStativ(speciesId, i, pkmStats[i]!, pkmEvs[i]!, pkmLvl, pkmNature);
     ivs.add(result);
   }
   return ivs;
@@ -89,6 +125,37 @@ List<int> calcStativ(int speciesId, int statIndex, int statValue, int ev,
     }
   }
   return ivs;
+}
+
+List<String> validateIVs(List<int?> ivs) {
+  List<String> errors = [];
+  for (var i = 0; i < 6; i++) {
+    if (ivs[i] == null) {
+      continue;
+    }
+    if (ivs[i]! < 0 || ivs[i]! > 31) {
+      errors.add("Invalid " + statNames[i] + " IV. Must be between 0 and 31");
+    }
+  }
+  return errors;
+}
+
+List<String> validateEVs(List<int?> evs) {
+  List<String> errors = [];
+  int sum = 0;
+  for (var i = 0; i < 6; i++) {
+    if (evs[i] == null) {
+      continue;
+    }
+    if (evs[i]! < 0 || evs[i]! > 255) {
+      errors.add("Invalid " + statNames[i] + " EV. Must be between 0 and 255");
+    }
+    sum += evs[i]!;
+  }
+  if (sum > 510) {
+    errors.add("Sum of all EVs must be less than 510");
+  }
+  return errors;
 }
 
 class MException implements Exception {

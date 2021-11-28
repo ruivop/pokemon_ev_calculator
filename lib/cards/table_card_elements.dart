@@ -77,7 +77,7 @@ class TableCell extends StatelessWidget {
 class TableCellEditable extends StatefulWidget {
   const TableCellEditable({
     Key? key,
-    required this.initialValue,
+    required this.value,
     required this.mainDecoration,
     required this.textColor,
     required this.focusNode,
@@ -85,7 +85,7 @@ class TableCellEditable extends StatefulWidget {
     required this.onChanged,
   }) : super(key: key);
 
-  final String? initialValue;
+  final String? value;
   final BoxDecoration mainDecoration;
   final Color textColor;
   final FocusNode focusNode;
@@ -102,7 +102,7 @@ class _TableCellEditableState extends State<TableCellEditable> {
   @override
   void initState() {
     super.initState();
-    controller = TextEditingController(text: widget.initialValue);
+    controller = TextEditingController(text: widget.value);
     widget.focusNode.addListener(onSelection);
   }
 
@@ -115,6 +115,9 @@ class _TableCellEditableState extends State<TableCellEditable> {
 
   @override
   Widget build(BuildContext context) {
+    if (controller.text != widget.value) {
+      controller.text = widget.value ?? '';
+    }
     return Expanded(
       child: Container(
         height: double.infinity,

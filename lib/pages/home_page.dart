@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../state.dart';
-import 'calculate_ev_page.dart';
+import 'calculate_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -88,19 +88,36 @@ class HomePage extends StatelessWidget {
                                     .setCalculationType(CalculationType.EV);
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        const CalculateEVPage(),
+                                    builder: (context) => const CalculatePage(),
                                   ),
                                 );
                               },
                             ),
                             HomePageButton(
                               title: "Calculate IV",
-                              onPressed: () {},
+                              onPressed: () {
+                                Provider.of<CalculationState>(context,
+                                        listen: false)
+                                    .setCalculationType(CalculationType.IV);
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => const CalculatePage(),
+                                  ),
+                                );
+                              },
                             ),
                             HomePageButton(
                               title: "Calculate Stats",
-                              onPressed: () {},
+                              onPressed: () {
+                                Provider.of<CalculationState>(context,
+                                        listen: false)
+                                    .setCalculationType(CalculationType.Stat);
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => const CalculatePage(),
+                                  ),
+                                );
+                              },
                             ),
                           ],
                         ),

@@ -16,7 +16,68 @@ class EVTableSelector extends StatefulWidget {
 
 class _EVTableSelectorState extends State<EVTableSelector> {
   final Color textColor = Colors.white;
-  List<FocusNode> focusNodes = List<FocusNode>.generate(13, (i) => FocusNode());
+  List<FocusNode> statsFocusNodes =
+      List<FocusNode>.generate(6, (i) => FocusNode());
+  List<FocusNode> ivFocusNodes =
+      List<FocusNode>.generate(6, (i) => FocusNode());
+  List<FocusNode> evFocusNodes =
+      List<FocusNode>.generate(6, (i) => FocusNode());
+  FocusNode emptyFocusNode = FocusNode();
+
+  FocusNode getFocusNode({
+    required int i,
+    bool isStats = false,
+    bool isIV = false,
+    bool isEv = false,
+  }) {
+    if (isStats) {
+      return statsFocusNodes[i];
+    } else if (isIV) {
+      return ivFocusNodes[i];
+    } else {
+      return evFocusNodes[i];
+    }
+  }
+
+  FocusNode getNextFocusNode({
+    required int i,
+    required CalculationType? type,
+    bool isStats = false,
+    bool isIV = false,
+    bool isEv = false,
+  }) {
+    var nonNullTye = type ?? CalculationType.Stat;
+    if (i != 5) {
+      if (isStats) {
+        return statsFocusNodes[i];
+      } else if (isIV) {
+        return ivFocusNodes[i];
+      } else {
+        return evFocusNodes[i];
+      }
+    } else {
+      if (nonNullTye == CalculationType.Stat) {
+        if (isIV) {
+          return evFocusNodes[0];
+        } else {
+          return emptyFocusNode;
+        }
+      } else if (nonNullTye == CalculationType.IV) {
+        if (isStats) {
+          return evFocusNodes[0];
+        } else {
+          return emptyFocusNode;
+        }
+      } else {
+        //if (nonNullTye == CalculationType.EV)
+        if (isStats) {
+          return ivFocusNodes[0];
+        } else {
+          return emptyFocusNode;
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +148,7 @@ class _EVTableSelectorState extends State<EVTableSelector> {
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () {
-          FocusScope.of(context).requestFocus(focusNodes[12]);
+          FocusScope.of(context).requestFocus(emptyFocusNode);
         },
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 8),
@@ -135,63 +196,122 @@ class _EVTableSelectorState extends State<EVTableSelector> {
                     ],
                     mainDecoration: mainDecoration,
                     textColor: textColor),
-                my.TableRow(
-                    tableTitle: "Stats",
-                    children: [
-                      for (var i = 0; i < 6; i++)
-                        my.TableCellEditable(
-                          initialValue: state.pkmStats[i] == null
-                              ? ""
-                              : state.pkmStats[i].toString(),
-                          mainDecoration: mainDecoration,
-                          textColor: textColor,
-                          focusNode: focusNodes[i],
-                          nextFocusNode: focusNodes[i + 1],
-                          onChanged: (value) {
-                            var newValue = int.tryParse(value);
-                            Provider.of<CalculationState>(context,
-                                    listen: false)
-                                .setStat(i, newValue);
-                          },
-                        )
-                    ],
-                    mainDecoration: mainDecoration,
-                    textColor: textColor),
-                my.TableRow(
-                    tableTitle: "IVs",
-                    children: [
-                      for (var i = 6; i < 12; i++)
-                        my.TableCellEditable(
-                          initialValue: state.pkmIVs[i - 6] == null
-                              ? ""
-                              : state.pkmIVs[i - 6].toString(),
-                          mainDecoration: mainDecoration,
-                          textColor: textColor,
-                          focusNode: focusNodes[i],
-                          nextFocusNode: focusNodes[i + 1],
-                          onChanged: (value) {
-                            var newValue = int.tryParse(value);
-                            Provider.of<CalculationState>(context,
-                                    listen: false)
-                                .setIV(i - 6, newValue);
-                          },
-                        )
-                    ],
-                    mainDecoration: mainDecoration,
-                    textColor: textColor),
-                my.TableRow(
-                    tableTitle: "Result EVs",
-                    children: [
-                      ...state.resultEVs
-                          .map((ep) => my.TableCell(
-                                content: ep,
-                                mainDecoration: mainDecoration,
-                                textColor: textColor,
-                              ))
-                          .toList()
-                    ],
-                    mainDecoration: mainDecoration,
-                    textColor: textColor)
+                if (state.calculationType != CalculationType.Stat)
+                  my.TableRow(
+                      tableTitle: "Stats",
+                      children: [
+                        for (var i = 0; i < 6; i++)
+                          my.TableCellEditable(
+                            value: state.pkmStats[i] == null
+                                ? ""
+                                : state.pkmStats[i].toString(),
+                            mainDecoration: mainDecoration,
+                            textColor: textColor,
+                            focusNode: getFocusNode(i: i, isStats: true),
+                            nextFocusNode: getNextFocusNode(
+                                i: i,
+                                type: state.calculationType,
+                                isStats: true),
+                            onChanged: (value) {
+                              var newValue = int.tryParse(value);
+                              Provider.of<CalculationState>(context,
+                                      listen: false)
+                                  .setStat(i, newValue);
+                            },
+                          )
+                      ],
+                      mainDecoration: mainDecoration,
+                      textColor: textColor),
+                if (state.calculationType != CalculationType.IV)
+                  my.TableRow(
+                      tableTitle: "IVs",
+                      children: [
+                        for (var i = 0; i < 6; i++)
+                          my.TableCellEditable(
+                            value: state.pkmIVs[i] == null
+                                ? ""
+                                : state.pkmIVs[i].toString(),
+                            mainDecoration: mainDecoration,
+                            textColor: textColor,
+                            focusNode: getFocusNode(i: i, isIV: true),
+                            nextFocusNode: getNextFocusNode(
+                                i: i, type: state.calculationType, isIV: true),
+                            onChanged: (value) {
+                              var newValue = int.tryParse(value);
+                              Provider.of<CalculationState>(context,
+                                      listen: false)
+                                  .setIV(i, newValue);
+                            },
+                          )
+                      ],
+                      mainDecoration: mainDecoration,
+                      textColor: textColor),
+                if (state.calculationType != CalculationType.EV)
+                  my.TableRow(
+                      tableTitle: "EVs",
+                      children: [
+                        for (var i = 0; i < 6; i++)
+                          my.TableCellEditable(
+                            value: state.pkmEVs[i] == null
+                                ? ""
+                                : state.pkmEVs[i].toString(),
+                            mainDecoration: mainDecoration,
+                            textColor: textColor,
+                            focusNode: getFocusNode(i: i, isEv: true),
+                            nextFocusNode: getNextFocusNode(
+                                i: i, type: state.calculationType, isEv: true),
+                            onChanged: (value) {
+                              var newValue = int.tryParse(value);
+                              Provider.of<CalculationState>(context,
+                                      listen: false)
+                                  .setEV(i, newValue);
+                            },
+                          )
+                      ],
+                      mainDecoration: mainDecoration,
+                      textColor: textColor),
+                if (state.calculationType == CalculationType.EV)
+                  my.TableRow(
+                      tableTitle: "Result EVs",
+                      children: [
+                        ...state.resultEVs
+                            .map((ep) => my.TableCell(
+                                  content: ep,
+                                  mainDecoration: mainDecoration,
+                                  textColor: textColor,
+                                ))
+                            .toList()
+                      ],
+                      mainDecoration: mainDecoration,
+                      textColor: textColor),
+                if (state.calculationType == CalculationType.IV)
+                  my.TableRow(
+                      tableTitle: "Result IVs",
+                      children: [
+                        ...state.resultIVs
+                            .map((iv) => my.TableCell(
+                                  content: iv,
+                                  mainDecoration: mainDecoration,
+                                  textColor: textColor,
+                                ))
+                            .toList()
+                      ],
+                      mainDecoration: mainDecoration,
+                      textColor: textColor),
+                if (state.calculationType == CalculationType.Stat)
+                  my.TableRow(
+                      tableTitle: "Result Stats",
+                      children: [
+                        ...state.resultStats
+                            .map((stat) => my.TableCell(
+                                  content: stat,
+                                  mainDecoration: mainDecoration,
+                                  textColor: textColor,
+                                ))
+                            .toList()
+                      ],
+                      mainDecoration: mainDecoration,
+                      textColor: textColor)
               ],
             ),
           ),
@@ -202,9 +322,16 @@ class _EVTableSelectorState extends State<EVTableSelector> {
 
   @override
   void dispose() {
-    for (var node in focusNodes) {
+    for (var node in statsFocusNodes) {
       node.dispose();
     }
+    for (var node in ivFocusNodes) {
+      node.dispose();
+    }
+    for (var node in evFocusNodes) {
+      node.dispose();
+    }
+    emptyFocusNode.dispose();
     super.dispose();
   }
 }
