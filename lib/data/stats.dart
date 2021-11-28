@@ -129,16 +129,15 @@ List<double> ivr = [
   30,
   31
 ];
-/*
-List<String> stats = [
+
+List<String> statNames = [
   'HP',
   'Attack',
   'Defense',
   'Sp.Attack',
   'Sp.Defense',
   'Speed',
-  '&mdash;'
-];*/
+];
 List<String> types = [
   'Normal',
   'Fighting',

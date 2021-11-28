@@ -1,7 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
+import '../state.dart';
 import 'calculate_ev_page.dart';
 
 class HomePage extends StatelessWidget {
@@ -81,6 +83,9 @@ class HomePage extends StatelessWidget {
                             HomePageButton(
                               title: "Calculate EV",
                               onPressed: () {
+                                Provider.of<CalculationState>(context,
+                                        listen: false)
+                                    .setCalculationType(CalculationType.EV);
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) =>

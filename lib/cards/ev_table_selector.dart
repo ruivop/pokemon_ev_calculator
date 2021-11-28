@@ -1,20 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:pokemon_ev_calculator/cards/table_card_elements.dart' as my;
 import 'package:pokemon_ev_calculator/data/stats.dart';
 import 'package:pokemon_ev_calculator/reusable/card.dart';
 import 'package:provider/provider.dart';
 
 import '../state.dart';
 
-class StatsSelector extends StatefulWidget {
-  const StatsSelector({Key? key}) : super(key: key);
+class EVTableSelector extends StatefulWidget {
+  const EVTableSelector({Key? key}) : super(key: key);
 
   @override
-  State<StatsSelector> createState() => _StatsSelectorState();
+  State<EVTableSelector> createState() => _EVTableSelectorState();
 }
 
-class _StatsSelectorState extends State<StatsSelector> {
+class _EVTableSelectorState extends State<EVTableSelector> {
   final Color textColor = Colors.white;
   List<FocusNode> focusNodes = List<FocusNode>.generate(13, (i) => FocusNode());
 
@@ -72,7 +72,7 @@ class _StatsSelectorState extends State<StatsSelector> {
                 "SPD",
               ]
                   .map((header) => Expanded(
-                          child: TableHeader(
+                          child: my.TableHeader(
                         title: header,
                         mainBorderSide: mainBorderSide,
                         textColor: textColor,
@@ -100,10 +100,10 @@ class _StatsSelectorState extends State<StatsSelector> {
             builder: (context, state, child) => Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                TableRow(
+                my.TableRow(
                     tableTitle: "Nature Efect",
                     children: [
-                      TableCell(
+                      my.TableCell(
                         content: "",
                         mainDecoration: mainDecoration,
                         textColor: textColor,
@@ -111,7 +111,7 @@ class _StatsSelectorState extends State<StatsSelector> {
                       ...natures[state.pkmNature == null || state.pkmNature == 0
                               ? 1
                               : state.pkmNature!]
-                          .map((multiplier) => TableCell(
+                          .map((multiplier) => my.TableCell(
                                 content: multiplier == 1
                                     ? "-"
                                     : "x" + multiplier.toString(),
@@ -122,11 +122,11 @@ class _StatsSelectorState extends State<StatsSelector> {
                     ],
                     mainDecoration: mainDecoration,
                     textColor: textColor),
-                TableRow(
+                my.TableRow(
                     tableTitle: "Base Stats",
                     children: [
                       ...state.selectedSpecies.baseStats
-                          .map((statVal) => TableCell(
+                          .map((statVal) => my.TableCell(
                                 content: statVal.toString(),
                                 mainDecoration: mainDecoration,
                                 textColor: textColor,
@@ -135,24 +135,14 @@ class _StatsSelectorState extends State<StatsSelector> {
                     ],
                     mainDecoration: mainDecoration,
                     textColor: textColor),
-                /*TableRow(
-                    tableTitle: "Effort Points",
-                    children: [
-                      ...state.selectedPokemon.efortPoints
-                          .map((ep) => TableCell(
-                                content: ep == 0 ? "" : ep.toString(),
-                                mainDecoration: mainDecoration,
-                                textColor: textColor,
-                              ))
-                          .toList()
-                    ],
-                    mainDecoration: mainDecoration,
-                    textColor: textColor),*/
-                TableRow(
+                my.TableRow(
                     tableTitle: "Stats",
                     children: [
                       for (var i = 0; i < 6; i++)
-                        TableCellEditable(
+                        my.TableCellEditable(
+                          initialValue: state.pkmStats[i] == null
+                              ? ""
+                              : state.pkmStats[i].toString(),
                           mainDecoration: mainDecoration,
                           textColor: textColor,
                           focusNode: focusNodes[i],
@@ -167,11 +157,14 @@ class _StatsSelectorState extends State<StatsSelector> {
                     ],
                     mainDecoration: mainDecoration,
                     textColor: textColor),
-                TableRow(
+                my.TableRow(
                     tableTitle: "IVs",
                     children: [
                       for (var i = 6; i < 12; i++)
-                        TableCellEditable(
+                        my.TableCellEditable(
+                          initialValue: state.pkmIVs[i - 6] == null
+                              ? ""
+                              : state.pkmIVs[i - 6].toString(),
                           mainDecoration: mainDecoration,
                           textColor: textColor,
                           focusNode: focusNodes[i],
@@ -186,11 +179,11 @@ class _StatsSelectorState extends State<StatsSelector> {
                     ],
                     mainDecoration: mainDecoration,
                     textColor: textColor),
-                TableRow(
+                my.TableRow(
                     tableTitle: "Result EVs",
                     children: [
                       ...state.resultEVs
-                          .map((ep) => TableCell(
+                          .map((ep) => my.TableCell(
                                 content: ep,
                                 mainDecoration: mainDecoration,
                                 textColor: textColor,
@@ -213,196 +206,5 @@ class _StatsSelectorState extends State<StatsSelector> {
       node.dispose();
     }
     super.dispose();
-  }
-}
-
-class TableRow extends StatelessWidget {
-  const TableRow({
-    Key? key,
-    required this.mainDecoration,
-    required this.textColor,
-    required this.tableTitle,
-    required this.children,
-  }) : super(key: key);
-
-  final BoxDecoration mainDecoration;
-  final Color textColor;
-  final String tableTitle;
-  final List<Widget> children;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 50,
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              height: double.infinity,
-              decoration: mainDecoration,
-              child: Center(
-                child: Text(
-                  tableTitle,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: textColor,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          ...children
-        ],
-      ),
-    );
-  }
-}
-
-class TableCell extends StatelessWidget {
-  const TableCell({
-    Key? key,
-    required this.mainDecoration,
-    required this.textColor,
-    required this.content,
-  }) : super(key: key);
-
-  final BoxDecoration mainDecoration;
-  final Color textColor;
-  final String content;
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        height: double.infinity,
-        decoration: mainDecoration,
-        child: Center(
-          child: Text(
-            content,
-            style: TextStyle(
-              color: textColor,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class TableCellEditable extends StatefulWidget {
-  const TableCellEditable({
-    Key? key,
-    required this.mainDecoration,
-    required this.textColor,
-    required this.focusNode,
-    required this.nextFocusNode,
-    required this.onChanged,
-  }) : super(key: key);
-
-  final BoxDecoration mainDecoration;
-  final Color textColor;
-  final FocusNode focusNode;
-  final FocusNode nextFocusNode;
-  final void Function(String value) onChanged;
-
-  @override
-  State<TableCellEditable> createState() => _TableCellEditableState();
-}
-
-class _TableCellEditableState extends State<TableCellEditable> {
-  late TextEditingController controller;
-
-  @override
-  void initState() {
-    super.initState();
-    controller = TextEditingController();
-    widget.focusNode.addListener(onSelection);
-  }
-
-  void onSelection() {
-    if (widget.focusNode.hasFocus) {
-      controller.selection =
-          TextSelection(baseOffset: 0, extentOffset: controller.text.length);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        height: double.infinity,
-        decoration: widget.mainDecoration,
-        child: Center(
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-            child: TextField(
-              focusNode: widget.focusNode,
-              controller: controller,
-              textAlign: TextAlign.center,
-              maxLength: 3,
-              keyboardType: TextInputType.phone, // TextInputType.number,
-              maxLengthEnforcement: MaxLengthEnforcement.none,
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.digitsOnly
-              ],
-              onSubmitted: (value) {
-                if (value.isNotEmpty) {
-                  FocusScope.of(context).requestFocus(widget.nextFocusNode);
-                }
-              },
-              onChanged: (value) {
-                widget.onChanged(value);
-              },
-              decoration: const InputDecoration(
-                contentPadding: EdgeInsets.all(5),
-                border: OutlineInputBorder(),
-                counterText: "",
-                filled: true,
-                fillColor: Colors.white,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    widget.focusNode.removeListener(onSelection);
-    super.dispose();
-  }
-}
-
-class TableHeader extends StatelessWidget {
-  final BorderSide mainBorderSide;
-  final Color textColor;
-  final String title;
-
-  const TableHeader({
-    Key? key,
-    required this.mainBorderSide,
-    required this.textColor,
-    required this.title,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 20,
-      decoration: BoxDecoration(
-        border: Border(
-          top: mainBorderSide,
-          bottom: mainBorderSide,
-          left: mainBorderSide,
-        ),
-      ),
-      child: Center(
-          child: Text(title,
-              style: TextStyle(
-                color: textColor,
-              ))),
-    );
   }
 }

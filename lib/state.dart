@@ -4,15 +4,19 @@ import 'package:pokemon_ev_calculator/utils.dart';
 import 'data/pokemons.dart';
 
 class CalculationState extends ChangeNotifier {
+  CalculationType? calculationType;
+
   late Species selectedSpecies;
-  int? pkmNature;
-  int pkmLvl = 50;
-  List<int?> pkmStats = [null, null, null, null, null, null];
-  List<int?> pkmIVs = [null, null, null, null, null, null];
+  late int? pkmNature;
+  late int pkmLvl;
+  late List<int?> pkmStats;
+  late List<int?> pkmIVs;
+  late List<int?> pkmEVs;
 
-  List<String> resultEVs = ["", "", "", "", "", ""];
+  late List<String> resultIVs;
+  late List<String> resultEVs;
 
-  List<String> errors = [];
+  late List<String> errors;
 
   CalculationState() {
     initializeValues();
@@ -24,37 +28,55 @@ class CalculationState extends ChangeNotifier {
     pkmLvl = 50;
     pkmStats = [null, null, null, null, null, null];
     pkmIVs = [null, null, null, null, null, null];
+    resultIVs = ["", "", "", "", "", ""];
     resultEVs = ["", "", "", "", "", ""];
-    calculateEVs();
+    errors = [];
+    _calculate();
+  }
+
+  setCalculationType(CalculationType type) {
+    calculationType = type;
+    _calculate();
   }
 
   setNewNature(int newNature) {
     pkmNature = newNature;
-    calculateEVs();
+    _calculate();
   }
 
   setNewLevel(int newLevel) {
     if (newLevel == pkmLvl) return;
     pkmLvl = newLevel;
-    calculateEVs();
+    _calculate();
   }
 
   setNewSpecies(Species newPokemon) {
     selectedSpecies = newPokemon;
-    calculateEVs();
+    _calculate();
   }
 
   setStat(int statIndex, int? newValue) {
     pkmStats[statIndex] = newValue;
-    calculateEVs();
+    _calculate();
   }
 
   setIV(int ivIndex, int? newValue) {
     pkmIVs[ivIndex] = newValue;
-    calculateEVs();
+    _calculate();
   }
 
-  calculateEVs() {
+  _calculate() {
+    if (calculationType == null) return;
+    if (calculationType == CalculationType.EV) {
+      _calculateEvs();
+    } else if (calculationType == CalculationType.IV) {
+      _calculateIvs();
+    } else {
+      _calculateStats();
+    }
+  }
+
+  _calculateEvs() {
     errors.clear();
     if (pkmNature == null || pkmNature == 0) {
       errors.add("Please select a nature.");
@@ -79,4 +101,14 @@ class CalculationState extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  _calculateIvs() {}
+
+  _calculateStats() {}
+}
+
+enum CalculationType {
+  IV,
+  EV,
+  Stat,
 }

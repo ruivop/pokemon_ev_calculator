@@ -47,3 +47,56 @@ int calcStat(
   }
   return result;
 }
+
+List<List<int>> getIVs(int speciesId, int pkmLvl, int pkmNature,
+    List<int> pkmStats, List<int> pkmEvs) {
+  //validate IVs
+  for (var i = 0; i < 6; i++) {
+    var min = calcStat(speciesId, i, 0, pkmEvs[i], pkmLvl, pkmNature);
+    var max = calcStat(speciesId, i, 31, pkmEvs[i], pkmLvl, pkmNature);
+    if (pkmStats[i] < min || pkmStats[i] > max) {
+      throw MException("Invalid " +
+          statNames[i] +
+          " stat. Must be between " +
+          min.toString() +
+          " and " +
+          max.toString());
+    }
+  }
+
+  List<List<int>> ivs = [];
+  //Calculate IVs
+  for (var i = 0; i < 6; i++) {
+    var result =
+        calcStativ(speciesId, i, pkmStats[i], pkmEvs[i], pkmLvl, pkmNature);
+    ivs.add(result);
+  }
+  return ivs;
+}
+
+List<int> calcStativ(int speciesId, int statIndex, int statValue, int ev,
+    int level, int natureIndex) {
+  List<int> ivs = [];
+
+  //Shedinja
+  if (statIndex == 0 && allSpecies[speciesId]!.number == "292") {
+    return [];
+  }
+  for (var i = 0; i < 32; i++) {
+    if (calcStat(speciesId, statIndex, i, ev, level, natureIndex) ==
+        statValue) {
+      ivs.add(i);
+    }
+  }
+  return ivs;
+}
+
+class MException implements Exception {
+  String message;
+  MException(this.message) : super();
+
+  @override
+  String toString() {
+    return message;
+  }
+}

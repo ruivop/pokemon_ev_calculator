@@ -41,6 +41,13 @@ int getBase(int pokemonId, int statIndex) {
   return allSpecies[pokemonId]?.baseStats[statIndex] ?? 0;
 }
 
+Species getSpeciesByNumber(String number) {
+  return allSpecies.entries
+      .toList()
+      .firstWhere((species) => species.value.number == number)
+      .value;
+}
+
 Map<int, Species> allSpecies = {
   1044: Species(1044, "1", "Bulbasaur", null, [45, 49, 49, 65, 65, 45], 12, 3),
   1043: Species(1043, "2", "Ivysaur", null, [60, 62, 63, 80, 80, 60], 12, 3),
