@@ -149,6 +149,9 @@ class ChoosingPokemonPageHeaderDelagate extends SliverPersistentHeaderDelegate {
                                     ),
                                 ],
                               ),
+                              errorCount != 0
+                                  ? const SizedBox(width: 40)
+                                  : const SizedBox(width: 0),
                               /*const SizedBox(width: 4),
                               const Icon(
                                 Icons.refresh,
@@ -234,10 +237,10 @@ class ChoosingPokemonPageHeaderDelagate extends SliverPersistentHeaderDelegate {
             ),
           ),
         ),
-        Positioned(
-          top: isSmall ? 12.5 : null,
-          bottom: isSmall ? null : 8,
-          right: isSmall ? 30 : 8,
+        AnimatedPositioned(
+          duration: const Duration(milliseconds: 100),
+          bottom: isSmall ? 12.5 : 8,
+          right: isSmall ? 40 : 8,
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: () {

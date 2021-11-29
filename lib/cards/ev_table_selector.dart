@@ -49,11 +49,11 @@ class _EVTableSelectorState extends State<EVTableSelector> {
     var nonNullTye = type ?? CalculationType.Stat;
     if (i != 5) {
       if (isStats) {
-        return statsFocusNodes[i];
+        return statsFocusNodes[i + 1];
       } else if (isIV) {
-        return ivFocusNodes[i];
+        return ivFocusNodes[i + 1];
       } else {
-        return evFocusNodes[i];
+        return evFocusNodes[i + 1];
       }
     } else {
       if (nonNullTye == CalculationType.Stat) {

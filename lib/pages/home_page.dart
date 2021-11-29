@@ -11,6 +11,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var aspectRatio =
+        MediaQuery.of(context).size.width / MediaQuery.of(context).size.height;
     return AnnotatedRegion(
       value: SystemUiOverlayStyle.dark,
       child: Scaffold(
@@ -18,26 +20,34 @@ class HomePage extends StatelessWidget {
         width: double.infinity,
         //color: Color(0xffcfe893),
         decoration: const BoxDecoration(
-          image: DecorationImage(
+          gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFF4a5d9d),
+                Color(0xFF2a3560),
+              ]),
+          /*image: DecorationImage(
               image: AssetImage('resources/main_background.png'),
               repeat: ImageRepeat.repeat,
-              scale: 4),
+              scale: 4),*/
         ),
         child: SafeArea(
           child: Column(
             children: [
               Container(
-                margin: const EdgeInsets.only(top: 16, right: 16, left: 16),
+                width: double.infinity,
+                margin: const EdgeInsets.only(top: 16),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
-                decoration: BoxDecoration(
-                  color: const Color(0xfffde3a1),
-                  borderRadius: BorderRadius.circular(100),
-                  border: Border.all(
+                decoration: const BoxDecoration(
+                  color: Color(0xfffde3a1),
+                  //borderRadius: BorderRadius.circular(100),
+                  /*border: Border.all(
                     color: const Color(0xff928640),
                     width: 4,
-                  ),
-                  boxShadow: const [
+                  ),*/
+                  boxShadow: [
                     BoxShadow(
                       color: Color(0x55000000),
                       blurRadius: 3,
@@ -45,10 +55,12 @@ class HomePage extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: const TitleStokeText(
-                  text: "IV, EV And Stat Calculator",
-                  fontSize: 20,
-                  strokeWidth: 3,
+                child: const Center(
+                  child: TitleStokeText(
+                    text: "IV, EV And Stat Calculator",
+                    fontSize: 20,
+                    strokeWidth: 3,
+                  ),
                 ),
               ),
               Expanded(
@@ -59,14 +71,7 @@ class HomePage extends StatelessWidget {
                     child: Container(
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            Color(0xfff4f3de),
-                            Color(0xffdfdec9),
-                          ],
-                        ),
+                        color: Colors.white.withAlpha(50),
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: const [
                           BoxShadow(
@@ -77,8 +82,10 @@ class HomePage extends StatelessWidget {
                         ],
                       ),
                       child: Center(
-                        child: Wrap(
-                          alignment: WrapAlignment.center,
+                        child: ListView(
+                          scrollDirection:
+                              aspectRatio > 1 ? Axis.horizontal : Axis.vertical,
+                          shrinkWrap: true,
                           children: [
                             HomePageButton(
                               title: "Calculate EV",
@@ -143,56 +150,58 @@ class HomePageButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Container(
-        width: 200,
-        height: 180,
-        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        padding: const EdgeInsets.all(3),
-        decoration: BoxDecoration(
-          color: Colors.orange[200],
-          gradient: const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xffffcc80),
-              Color(0xffe0af65),
-            ],
-          ),
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: const [
-            BoxShadow(
-              color: Color(0x33000000),
-              blurRadius: 5,
-              offset: Offset(3, 3),
-            ),
-          ],
-        ),
+    return Center(
+      child: GestureDetector(
+        onTap: onPressed,
         child: Container(
+          width: 200,
+          height: 180,
+          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          padding: const EdgeInsets.all(3),
           decoration: BoxDecoration(
-            color: Colors.orange[100],
-            borderRadius: BorderRadius.circular(8),
+            color: Colors.orange[200],
             gradient: const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Color(0xffffe0b2),
-                Color(0xffe5c79a),
+                Color(0xffffcc80),
+                Color(0xffe0af65),
               ],
             ),
-            border: Border.all(
-              color: Colors.orange[400]!,
-              width: 2,
-            ),
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x33000000),
+                blurRadius: 5,
+                offset: Offset(3, 3),
+              ),
+            ],
           ),
-          child: Center(
-              child: TitleStokeText(
-            text: title,
-            fontSize: 40,
-            strokeWidth: 4,
-            strokeColor: Color.lerp(Colors.orange[400]!, Colors.black, 0.2)!,
-          )),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.orange[100],
+              borderRadius: BorderRadius.circular(8),
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xffffe0b2),
+                  Color(0xffe5c79a),
+                ],
+              ),
+              border: Border.all(
+                color: Colors.orange[400]!,
+                width: 2,
+              ),
+            ),
+            child: Center(
+                child: TitleStokeText(
+              text: title,
+              fontSize: 40,
+              strokeWidth: 4,
+              strokeColor: Color.lerp(Colors.orange[400]!, Colors.black, 0.2)!,
+            )),
+          ),
         ),
       ),
     );
