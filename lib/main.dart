@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pokemon_ev_calculator/pages/home_page.dart';
@@ -11,14 +13,14 @@ import 'data/pokemons.dart';
 void main() {
   runApp(const MyApp());
 }
-/*
+
 class AppScrollBehavior extends MaterialScrollBehavior {
   @override
   Set<PointerDeviceKind> get dragDevices => {
         PointerDeviceKind.touch,
         PointerDeviceKind.mouse,
       };
-}*/
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -32,7 +34,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'Roboto'),
-        //scrollBehavior: AppScrollBehavior(),
+        scrollBehavior: AppScrollBehavior(),
         home: const HomePage(),
       ),
     );
@@ -48,6 +50,8 @@ class Test extends StatefulWidget {
 
 class _TestState extends State<Test> {
   String message = 'nothing';
+  List<List<String>> dataToShow = [];
+  List<List<String>> dataToShow2 = [];
 
   @override
   Widget build(BuildContext context) {
@@ -61,17 +65,29 @@ class _TestState extends State<Test> {
             child: const Text("Test"),
             onPressed: () {
               var species = getSpeciesByNumber("612");
+              var species2 = getSpeciesByNumber("6");
               try {
-                var evs = getIVs(
-                  species.id,
-                  70,
-                  9,
-                  [208, 203, 147, 110, 124, 178],
-                  [16, 44, 32, 32, 28, 16],
-                );
-                setState(() {
-                  message = evs.toString();
-                });
+                dataToShow.clear();
+                for (var i = 0; i <= 100; i++) {
+                  dataToShow.add(getStats(
+                    species.id,
+                    i,
+                    9,
+                    [31, 31, 31, 31, 31, 31],
+                    [0, 0, 0, 0, 0, 0],
+                  ));
+                  dataToShow2.clear();
+                  for (var i = 0; i <= 100; i++) {
+                    dataToShow2.add(getStats(
+                      species2.id,
+                      i,
+                      9,
+                      [31, 31, 31, 31, 31, 31],
+                      [0, 0, 0, 0, 0, 0],
+                    ));
+                  }
+                }
+                setState(() {});
               } catch (e) {
                 setState(() {
                   message = e.toString();
@@ -79,6 +95,49 @@ class _TestState extends State<Test> {
               }
             },
           ),
+          Container(
+            width: 550,
+            height: 400,
+            color: Colors.amber,
+            child: Stack(children: [
+              for (var j = 0; j < 6; j++)
+                for (var i = 0; i < dataToShow.length; i++)
+                  Positioned(
+                    left: i.toDouble() * 5,
+                    bottom: double.tryParse(dataToShow[i][j]) ?? 0,
+                    child: Icon(
+                      Icons.circle,
+                      color: [
+                        Colors.yellow,
+                        Colors.blue,
+                        Colors.red,
+                        Colors.green,
+                        Colors.brown,
+                        Colors.purple,
+                      ][j],
+                      size: 6,
+                    ),
+                  ),
+              for (var j = 0; j < 6; j++)
+                for (var i = 0; i < dataToShow2.length; i++)
+                  Positioned(
+                    left: i.toDouble() * 5,
+                    bottom: double.tryParse(dataToShow2[i][j]) ?? 0,
+                    child: Icon(
+                      Icons.crop_square,
+                      color: [
+                        Colors.yellow,
+                        Colors.blue,
+                        Colors.red,
+                        Colors.green,
+                        Colors.brown,
+                        Colors.purple,
+                      ][j],
+                      size: 6,
+                    ),
+                  ),
+            ]),
+          )
         ],
       )),
     );

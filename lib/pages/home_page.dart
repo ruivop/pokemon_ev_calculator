@@ -11,10 +11,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var aspectRatio =
-        MediaQuery.of(context).size.width / MediaQuery.of(context).size.height;
     return AnnotatedRegion(
-      value: SystemUiOverlayStyle.dark,
+      value: SystemUiOverlayStyle.light,
       child: Scaffold(
           body: Container(
         width: double.infinity,
@@ -27,10 +25,6 @@ class HomePage extends StatelessWidget {
                 Color(0xFF4a5d9d),
                 Color(0xFF2a3560),
               ]),
-          /*image: DecorationImage(
-              image: AssetImage('resources/main_background.png'),
-              repeat: ImageRepeat.repeat,
-              scale: 4),*/
         ),
         child: SafeArea(
           child: Column(
@@ -42,11 +36,6 @@ class HomePage extends StatelessWidget {
                     const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
                 decoration: const BoxDecoration(
                   color: Color(0xfffde3a1),
-                  //borderRadius: BorderRadius.circular(100),
-                  /*border: Border.all(
-                    color: const Color(0xff928640),
-                    width: 4,
-                  ),*/
                   boxShadow: [
                     BoxShadow(
                       color: Color(0x55000000),
@@ -56,35 +45,38 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
                 child: const Center(
-                  child: TitleStokeText(
-                    text: "IV, EV And Stat Calculator",
-                    fontSize: 20,
-                    strokeWidth: 3,
+                  child: Text(
+                    "IV, EV And Stat Calculator",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ),
               Expanded(
                   flex: 2,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 16),
+                  child: Center(
                     child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withAlpha(50),
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0x55000000),
-                            blurRadius: 3,
-                            offset: Offset(3, 3),
-                          ),
-                        ],
-                      ),
-                      child: Center(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 16),
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 24),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF2a3560),
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0x55000000),
+                              blurRadius: 0,
+                              spreadRadius: 2,
+                              offset: Offset(5, 5),
+                            ),
+                          ],
+                        ),
                         child: ListView(
-                          scrollDirection:
-                              aspectRatio > 1 ? Axis.horizontal : Axis.vertical,
                           shrinkWrap: true,
                           children: [
                             HomePageButton(
@@ -130,7 +122,33 @@ class HomePage extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ))
+                  )),
+              Center(
+                  child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 16),
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 24, horizontal: 16),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF2a3560),
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0x55000000),
+                              blurRadius: 0,
+                              spreadRadius: 2,
+                              offset: Offset(5, 5),
+                            ),
+                          ],
+                        ),
+                        child: const Text(
+                            '"Pokemon" is a trademark of "The Pokémon Company". This app is not affiliated with or endorsed by "The Pokémon Company".',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white)),
+                      )))
             ],
           ),
         ),
@@ -151,7 +169,29 @@ class HomePageButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: GestureDetector(
+        child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      width: 300,
+      height: 60,
+      child: OutlinedButton(
+        onPressed: onPressed,
+        child: AutoSizeText(
+          title,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+          maxLines: 1,
+        ),
+        style: OutlinedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(50.0),
+          ),
+          backgroundColor: Colors.white.withAlpha(220),
+        ),
+      ),
+    )
+        /*GestureDetector(
         onTap: onPressed,
         child: Container(
           width: 200,
@@ -203,8 +243,8 @@ class HomePageButton extends StatelessWidget {
             )),
           ),
         ),
-      ),
-    );
+      ),*/
+        );
   }
 }
 
