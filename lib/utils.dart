@@ -110,6 +110,76 @@ List<List<int>> getIVs(int speciesId, int pkmLvl, int pkmNature,
   return ivs;
 }
 
+class CalculatedStats {
+  final List<String> stats;
+  final String label;
+
+  const CalculatedStats(this.stats, this.label);
+}
+
+List<CalculatedStats> calcStatsByIv(
+    int speciesId, List<int> evs, int level, int natureIndex) {
+  List<CalculatedStats> statsByIv = [];
+  for (var i = 0; i < 32; i++) {
+    var stats = <String>[];
+    for (var statIndex = 0; statIndex < 6; statIndex++) {
+      //Shedinja
+      if (statIndex == 0 && allSpecies[speciesId]!.number == "292") {
+        stats.add(1.toString());
+      } else {
+        stats.add(calcStat(
+                speciesId, statIndex, i, evs[statIndex], level, natureIndex)
+            .toString());
+      }
+    }
+    statsByIv.add(CalculatedStats(stats, i.toString()));
+  }
+
+  return statsByIv;
+}
+
+List<CalculatedStats> calcStatsByEv(
+    int speciesId, List<int> ivs, int level, int natureIndex) {
+  List<CalculatedStats> statsByEv = [];
+  for (var i = 0; i < 256; i += 4) {
+    var stats = <String>[];
+    for (var statIndex = 0; statIndex < 6; statIndex++) {
+      //Shedinja
+      if (statIndex == 0 && allSpecies[speciesId]!.number == "292") {
+        stats.add(1.toString());
+      } else {
+        stats.add(calcStat(
+                speciesId, statIndex, ivs[statIndex], i, level, natureIndex)
+            .toString());
+      }
+    }
+    statsByEv.add(CalculatedStats(stats, i.toString()));
+  }
+
+  return statsByEv;
+}
+
+List<CalculatedStats> calcStatsByLevel(
+    int speciesId, List<int> ivs, List<int> evs, int natureIndex) {
+  List<CalculatedStats> statsByLevel = [];
+  for (var i = 1; i <= 100; i++) {
+    var stats = <String>[];
+    for (var statIndex = 0; statIndex < 6; statIndex++) {
+      //Shedinja
+      if (statIndex == 0 && allSpecies[speciesId]!.number == "292") {
+        stats.add(1.toString());
+      } else {
+        stats.add(calcStat(speciesId, statIndex, ivs[statIndex], evs[statIndex],
+                i, natureIndex)
+            .toString());
+      }
+    }
+    statsByLevel.add(CalculatedStats(stats, i.toString()));
+  }
+
+  return statsByLevel;
+}
+
 List<int> calcStativ(int speciesId, int statIndex, int statValue, int ev,
     int level, int natureIndex) {
   List<int> ivs = [];

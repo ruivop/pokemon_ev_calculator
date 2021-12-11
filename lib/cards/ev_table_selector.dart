@@ -7,6 +7,18 @@ import 'package:provider/provider.dart';
 
 import '../state.dart';
 
+var mainBorderSide = BorderSide(
+  color: Colors.white.withAlpha(150),
+);
+var mainDecoration = BoxDecoration(
+  //botther on the left
+  border: Border(
+    bottom: mainBorderSide,
+    left: mainBorderSide,
+  ),
+);
+const Color textColor = Colors.white;
+
 class EVTableSelector extends StatefulWidget {
   const EVTableSelector({Key? key}) : super(key: key);
 
@@ -15,7 +27,6 @@ class EVTableSelector extends StatefulWidget {
 }
 
 class _EVTableSelectorState extends State<EVTableSelector> {
-  final Color textColor = Colors.white;
   List<FocusNode> statsFocusNodes =
       List<FocusNode>.generate(6, (i) => FocusNode());
   List<FocusNode> ivFocusNodes =
@@ -81,16 +92,6 @@ class _EVTableSelectorState extends State<EVTableSelector> {
 
   @override
   Widget build(BuildContext context) {
-    var mainBorderSide = BorderSide(
-      color: Colors.white.withAlpha(150),
-    );
-    var mainDecoration = BoxDecoration(
-      //botther on the left
-      border: Border(
-        bottom: mainBorderSide,
-        left: mainBorderSide,
-      ),
-    );
     return SelectionCard(
       header: Column(
         mainAxisSize: MainAxisSize.min,
@@ -137,12 +138,13 @@ class _EVTableSelectorState extends State<EVTableSelector> {
                         title: header,
                         mainBorderSide: mainBorderSide,
                         textColor: textColor,
+                        backgroundColor: Colors.black.withAlpha(60),
                       )))
                   .toList(),
               /*
                 */
             ),
-          )
+          ),
         ],
       ),
       child: GestureDetector(
@@ -181,7 +183,8 @@ class _EVTableSelectorState extends State<EVTableSelector> {
                               ))
                           .toList()
                     ],
-                    mainDecoration: mainDecoration,
+                    mainDecoration: mainDecoration.copyWith(
+                        color: Colors.black.withAlpha(60)),
                     textColor: textColor),
                 my.TableRow(
                     tableTitle: "Base Stats",
@@ -194,7 +197,8 @@ class _EVTableSelectorState extends State<EVTableSelector> {
                               ))
                           .toList()
                     ],
-                    mainDecoration: mainDecoration,
+                    mainDecoration: mainDecoration.copyWith(
+                        color: Colors.black.withAlpha(60)),
                     textColor: textColor),
                 if (state.calculationType != CalculationType.Stat)
                   my.TableRow(
@@ -220,7 +224,8 @@ class _EVTableSelectorState extends State<EVTableSelector> {
                             },
                           )
                       ],
-                      mainDecoration: mainDecoration,
+                      mainDecoration: mainDecoration.copyWith(
+                          color: Colors.black.withAlpha(60)),
                       textColor: textColor),
                 if (state.calculationType != CalculationType.IV)
                   my.TableRow(
@@ -244,7 +249,8 @@ class _EVTableSelectorState extends State<EVTableSelector> {
                             },
                           )
                       ],
-                      mainDecoration: mainDecoration,
+                      mainDecoration: mainDecoration.copyWith(
+                          color: Colors.black.withAlpha(60)),
                       textColor: textColor),
                 if (state.calculationType != CalculationType.EV)
                   my.TableRow(
@@ -268,7 +274,8 @@ class _EVTableSelectorState extends State<EVTableSelector> {
                             },
                           )
                       ],
-                      mainDecoration: mainDecoration,
+                      mainDecoration: mainDecoration.copyWith(
+                          color: Colors.black.withAlpha(60)),
                       textColor: textColor),
                 if (state.calculationType == CalculationType.EV)
                   my.TableRow(
@@ -282,7 +289,8 @@ class _EVTableSelectorState extends State<EVTableSelector> {
                                 ))
                             .toList()
                       ],
-                      mainDecoration: mainDecoration,
+                      mainDecoration: mainDecoration.copyWith(
+                          color: Colors.black.withAlpha(60)),
                       textColor: textColor),
                 if (state.calculationType == CalculationType.IV)
                   my.TableRow(
@@ -296,7 +304,8 @@ class _EVTableSelectorState extends State<EVTableSelector> {
                                 ))
                             .toList()
                       ],
-                      mainDecoration: mainDecoration,
+                      mainDecoration: mainDecoration.copyWith(
+                          color: Colors.black.withAlpha(60)),
                       textColor: textColor),
                 if (state.calculationType == CalculationType.Stat)
                   my.TableRow(
@@ -310,7 +319,8 @@ class _EVTableSelectorState extends State<EVTableSelector> {
                                 ))
                             .toList()
                       ],
-                      mainDecoration: mainDecoration,
+                      mainDecoration: mainDecoration.copyWith(
+                          color: Colors.black.withAlpha(60)),
                       textColor: textColor)
               ],
             ),

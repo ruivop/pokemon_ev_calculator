@@ -4,6 +4,7 @@ import 'package:pokemon_ev_calculator/cards/level_selector.dart';
 import 'package:pokemon_ev_calculator/cards/nature_selector.dart';
 import 'package:pokemon_ev_calculator/cards/problems_card.dart';
 import 'package:pokemon_ev_calculator/cards/ev_table_selector.dart';
+import 'package:pokemon_ev_calculator/cards/stats_table.dart';
 import 'package:provider/provider.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
@@ -35,6 +36,8 @@ class _CalculatePageState extends State<CalculatePage> {
                 child: Container(
                   child: CustomScrollView(
                     controller: controller,
+                    keyboardDismissBehavior:
+                        ScrollViewKeyboardDismissBehavior.onDrag,
                     slivers: [
                       Header(
                         selectedSpecies: state.selectedSpecies,
@@ -72,6 +75,16 @@ class _CalculatePageState extends State<CalculatePage> {
                           ProblemsCard(
                             key: problemsCardKey,
                             errors: state.errors,
+                          ),
+                          StatsTable(
+                            statsToShow: state.calculateStatsBy(),
+                            actualStats:
+                                state.calculationType == CalculationType.Stat
+                                    ? state.resultStats
+                                        .map((e) => int.tryParse(e))
+                                        .toList()
+                                    : state.pkmStats,
+                            calculationType: state.calculationType,
                           ),
                         ]),
                       ),

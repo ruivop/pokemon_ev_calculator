@@ -2,23 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class TableRow extends StatelessWidget {
+  final BoxDecoration mainDecoration;
+  final Color textColor;
+  final String tableTitle;
+  final List<Widget> children;
+  final double height;
+
   const TableRow({
     Key? key,
     required this.mainDecoration,
     required this.textColor,
     required this.tableTitle,
     required this.children,
+    this.height = 50,
   }) : super(key: key);
-
-  final BoxDecoration mainDecoration;
-  final Color textColor;
-  final String tableTitle;
-  final List<Widget> children;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 50,
+      height: height,
       child: Row(
         children: [
           Expanded(
@@ -123,7 +125,7 @@ class _TableCellEditableState extends State<TableCellEditable> {
         height: double.infinity,
         decoration: widget.mainDecoration,
         child: Center(
-          child: Container(
+          child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
             child: TextField(
               focusNode: widget.focusNode,
@@ -168,12 +170,14 @@ class _TableCellEditableState extends State<TableCellEditable> {
 class TableHeader extends StatelessWidget {
   final BorderSide mainBorderSide;
   final Color textColor;
+  final Color? backgroundColor;
   final String title;
 
   const TableHeader({
     Key? key,
     required this.mainBorderSide,
     required this.textColor,
+    this.backgroundColor,
     required this.title,
   }) : super(key: key);
 
@@ -182,6 +186,7 @@ class TableHeader extends StatelessWidget {
     return Container(
       height: 20,
       decoration: BoxDecoration(
+        color: backgroundColor,
         border: Border(
           top: mainBorderSide,
           bottom: mainBorderSide,

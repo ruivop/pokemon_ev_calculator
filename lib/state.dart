@@ -178,6 +178,26 @@ class CalculationState extends ChangeNotifier {
     );
     notifyListeners();
   }
+
+  List<CalculatedStats>? calculateStatsBy() {
+    int natureToUse = pkmNature == null || pkmNature == 0 ? 1 : pkmNature!;
+
+    if (calculationType == CalculationType.Stat) {
+      return calcStatsByLevel(
+          selectedSpecies.id,
+          pkmIVs.map((e) => e ?? 0).toList(),
+          pkmEVs.map((e) => e ?? 0).toList(),
+          natureToUse);
+    } else if (calculationType == CalculationType.IV) {
+      return calcStatsByIv(selectedSpecies.id,
+          pkmEVs.map((e) => e ?? 0).toList(), pkmLvl, natureToUse);
+    } else if (calculationType == CalculationType.EV) {
+      return calcStatsByEv(selectedSpecies.id,
+          pkmIVs.map((e) => e ?? 0).toList(), pkmLvl, natureToUse);
+    } else {
+      return null;
+    }
+  }
 }
 
 enum CalculationType {
