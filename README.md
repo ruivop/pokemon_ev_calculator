@@ -1,4 +1,4 @@
-# pokemon_ev_calculator
+# pokemon stats calculator
 
 A new Flutter project.
 

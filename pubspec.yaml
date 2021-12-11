@@ -1,5 +1,5 @@
-name: pokemon_ev_calculator
-description: A new Flutter project.
+name: pokemon_stats_calculator
+description: An app to calculate the IV, EV and Stats on the Pokemon Core games.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -40,6 +40,7 @@ dependencies:
   wakelock: ^0.5.6
   auto_size_text: ^3.0.0
   numberpicker: ^2.1.1
+  firebase_core: ^1.10.5
 
 dev_dependencies:
   flutter_launcher_icons: "^0.9.2"

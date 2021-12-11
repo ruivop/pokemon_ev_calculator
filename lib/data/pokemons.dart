@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pokemon_ev_calculator/data/stats.dart';
+import 'package:pokemon_stats_calculator/data/stats.dart';
 
 class Species {
   int id;

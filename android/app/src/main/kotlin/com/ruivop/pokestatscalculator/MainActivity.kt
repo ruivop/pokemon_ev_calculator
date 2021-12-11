@@ -1,4 +1,4 @@
-package com.example.pokemon_ev_calculator
+package com.ruivop.pokestatscalculator
 
 import io.flutter.embedding.android.FlutterActivity
 

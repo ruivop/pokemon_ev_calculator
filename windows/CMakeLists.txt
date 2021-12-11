@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
-project(pokemon_ev_calculator LANGUAGES CXX)
+project(pokemon_stats_calculator LANGUAGES CXX)
 
-set(BINARY_NAME "pokemon_ev_calculator")
+set(BINARY_NAME "IV, EV and Stats Calculator")
 
 cmake_policy(SET CMP0063 NEW)
 

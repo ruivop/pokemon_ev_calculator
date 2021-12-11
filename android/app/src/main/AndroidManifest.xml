@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.pokemon_ev_calculator">
+    package="com.ruivop.pokestatscalculator">
    <application
-        android:label="pokemon_ev_calculator"
+        android:label="IV, EV and Stats Calculator"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

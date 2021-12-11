@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pokemon_ev_calculator/cards/table_card_elements.dart' as my;
-import 'package:pokemon_ev_calculator/reusable/card.dart';
+import 'package:pokemon_stats_calculator/cards/table_card_elements.dart' as my;
+import 'package:pokemon_stats_calculator/reusable/card.dart';
 import 'package:provider/provider.dart';
 
 import '../state.dart';

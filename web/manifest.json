@@ -1,6 +1,6 @@
 {
-    "name": "pokemon_ev_calculator",
-    "short_name": "pokemon_ev_calculator",
+    "name": "IV, EV and Stats Calculator",
+    "short_name": "Stats Calculator",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

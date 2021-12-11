@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pokemon_ev_calculator/data/pokemons.dart';
-import 'package:pokemon_ev_calculator/data/stats.dart';
-import 'package:pokemon_ev_calculator/reusable/card.dart';
-import 'package:pokemon_ev_calculator/state.dart';
+import 'package:pokemon_stats_calculator/data/pokemons.dart';
+import 'package:pokemon_stats_calculator/data/stats.dart';
+import 'package:pokemon_stats_calculator/reusable/card.dart';
+import 'package:pokemon_stats_calculator/state.dart';
 import 'package:provider/provider.dart';
 
 class NatureSelector extends StatelessWidget {

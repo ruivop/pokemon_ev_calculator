@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
-import 'package:pokemon_ev_calculator/reusable/card.dart';
+import 'package:pokemon_stats_calculator/reusable/card.dart';
 import 'package:provider/provider.dart';
 
 import '../state.dart';

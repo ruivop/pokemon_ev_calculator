@@ -2,9 +2,9 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pokemon_ev_calculator/pages/home_page.dart';
-import 'package:pokemon_ev_calculator/state.dart';
-import 'package:pokemon_ev_calculator/utils.dart';
+import 'package:pokemon_stats_calculator/pages/home_page.dart';
+import 'package:pokemon_stats_calculator/state.dart';
+import 'package:pokemon_stats_calculator/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
 

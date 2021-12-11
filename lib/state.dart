@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:pokemon_ev_calculator/utils.dart';
+import 'package:pokemon_stats_calculator/utils.dart';
 
 import 'data/pokemons.dart';
 

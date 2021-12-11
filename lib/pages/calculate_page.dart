@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pokemon_ev_calculator/cards/level_selector.dart';
-import 'package:pokemon_ev_calculator/cards/nature_selector.dart';
-import 'package:pokemon_ev_calculator/cards/problems_card.dart';
-import 'package:pokemon_ev_calculator/cards/ev_table_selector.dart';
-import 'package:pokemon_ev_calculator/cards/stats_table.dart';
+import 'package:pokemon_stats_calculator/cards/level_selector.dart';
+import 'package:pokemon_stats_calculator/cards/nature_selector.dart';
+import 'package:pokemon_stats_calculator/cards/problems_card.dart';
+import 'package:pokemon_stats_calculator/cards/ev_table_selector.dart';
+import 'package:pokemon_stats_calculator/cards/stats_table.dart';
 import 'package:provider/provider.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
