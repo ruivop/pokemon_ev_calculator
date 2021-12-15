@@ -1,25 +1,13 @@
-import 'dart:ui';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pokemon_stats_calculator/pages/home_page.dart';
 import 'package:pokemon_stats_calculator/state.dart';
 import 'package:pokemon_stats_calculator/utils.dart';
 import 'package:provider/provider.dart';
-import 'package:wakelock/wakelock.dart';
 
 import 'data/pokemons.dart';
 
-void main() {
+void main() async {
   runApp(const MyApp());
-}
-
-class AppScrollBehavior extends MaterialScrollBehavior {
-  @override
-  Set<PointerDeviceKind> get dragDevices => {
-        PointerDeviceKind.touch,
-        PointerDeviceKind.mouse,
-      };
 }
 
 class MyApp extends StatelessWidget {
@@ -28,13 +16,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    Wakelock.enable();
     return ChangeNotifierProvider(
       create: (context) => CalculationState(),
       child: MaterialApp(
         title: 'Flutter Demo',
-        theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'Roboto'),
-        scrollBehavior: AppScrollBehavior(),
+        theme: ThemeData(primarySwatch: Colors.blue),
         home: const HomePage(),
       ),
     );

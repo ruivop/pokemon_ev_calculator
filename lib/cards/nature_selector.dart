@@ -45,7 +45,7 @@ class NatureSelector extends StatelessWidget {
         height: 80,
         child: Center(
           child: SizedBox(
-            width: 200,
+            width: 250,
             height: 50,
             child: OutlinedButton(
               onPressed: () {
