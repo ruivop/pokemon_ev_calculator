@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pokemon_stats_calculator/data/pokemons.dart';
 import 'package:pokemon_stats_calculator/data/stats.dart';
+import 'package:pokemon_stats_calculator/generated/l10n.dart';
 import 'package:pokemon_stats_calculator/reusable/card.dart';
-import 'package:pokemon_stats_calculator/state.dart';
-import 'package:provider/provider.dart';
 
 class NatureSelector extends StatelessWidget {
   final Species selectedPokemon;
@@ -33,7 +32,7 @@ class NatureSelector extends StatelessWidget {
             margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
             alignment: Alignment.centerLeft,
             child: Text(
-              "Select Nature/Mint",
+              S.of(context).natureSelectorTitle,
               style: TextStyle(
                 color: Colors.white.withAlpha(150),
               ),
@@ -65,7 +64,7 @@ class NatureSelector extends StatelessWidget {
                     child: Center(
                       child: Text(
                           natureIndex == null || natureIndex == 0
-                              ? "Select Nature"
+                              ? S.of(context).natureSelectorNoNatureSelected
                               : getNatureNameById(natureIndex!),
                           style: const TextStyle(fontSize: 22)),
                     ),
@@ -101,11 +100,17 @@ class NatureSelectorPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var types = ["ATK", "DEF", "SP.A", "SP.D", "SPD"];
+    var types = [
+      S.of(context).statAtk,
+      S.of(context).statDef,
+      S.of(context).statSpA,
+      S.of(context).statSpD,
+      S.of(context).statSpd
+    ];
     var luminance = backgroundColor.computeLuminance();
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Select Nature"),
+        title: Text(S.of(context).natureSelectorScreenTitle),
         backgroundColor: backgroundColor,
         foregroundColor: luminance > 0.5 ? Colors.black : Colors.white,
         systemOverlayStyle: luminance > 0.5

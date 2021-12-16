@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pokemon_stats_calculator/cards/table_card_elements.dart' as my;
+import 'package:pokemon_stats_calculator/generated/l10n.dart';
 import 'package:pokemon_stats_calculator/reusable/card.dart';
-import 'package:provider/provider.dart';
 
 import '../state.dart';
 import '../utils.dart';
@@ -11,22 +11,54 @@ class StatsTable extends StatelessWidget {
   final List<CalculatedStats>? statsToShow;
   final List<int?> actualStats;
   final CalculationType? calculationType;
+  final bool isShowing;
+  final void Function() onTogleShowing;
   const StatsTable({
     Key? key,
     required this.statsToShow,
     required this.actualStats,
     required this.calculationType,
+    required this.isShowing,
+    required this.onTogleShowing,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    String labelStatsBy = "unknown";
-    if (calculationType == CalculationType.EV) {
-      labelStatsBy = "EV";
-    } else if (calculationType == CalculationType.IV) {
-      labelStatsBy = "IV";
-    } else if (calculationType == CalculationType.Stat) {
-      labelStatsBy = "Level";
+    String labelStatsBy = S.of(context).statsTableTitleLabelSuffixUnknown;
+    if (calculationType == CalculationType.ev) {
+      labelStatsBy = S.of(context).statsTableTitleLabelSuffixEv;
+    } else if (calculationType == CalculationType.iv) {
+      labelStatsBy = S.of(context).statsTableTitleLabelSuffixIv;
+    } else if (calculationType == CalculationType.stat) {
+      labelStatsBy = S.of(context).statsTableTitleLabelSuffixLevel;
+    }
+
+    if (!isShowing) {
+      return SelectionCard(
+        header: getTitleRow(context, labelStatsBy),
+        child: Center(
+          child: SizedBox(
+            width: 250,
+            child: OutlinedButton(
+              onPressed: () {
+                onTogleShowing();
+              },
+              style: OutlinedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50.0),
+                ),
+                backgroundColor: Colors.white.withAlpha(220),
+              ),
+              child: Text(
+                S.of(context).statsTableActivateButton(labelStatsBy),
+                style: const TextStyle(
+                  fontSize: 20,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
     }
 
     CalculatedStats unfitedMax =
@@ -62,27 +94,7 @@ class StatsTable extends StatelessWidget {
             header: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Row(
-                  children: [
-                    const SizedBox(width: 16),
-                    Icon(
-                      Icons.military_tech,
-                      color: Colors.white.withAlpha(150),
-                      size: 16,
-                    ),
-                    Container(
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 8, horizontal: 4),
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "Stats per $labelStatsBy",
-                        style: TextStyle(
-                          color: Colors.white.withAlpha(150),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                getTitleRow(context, labelStatsBy),
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 8),
                   decoration: BoxDecoration(
@@ -93,12 +105,12 @@ class StatsTable extends StatelessWidget {
                   child: Row(
                     children: [
                       labelStatsBy,
-                      "HP",
-                      "ATK",
-                      "DEF",
-                      "SP. A",
-                      "SP. D",
-                      "SPD",
+                      S.of(context).statHP,
+                      S.of(context).statAtk,
+                      S.of(context).statDef,
+                      S.of(context).statSpA,
+                      S.of(context).statSpD,
+                      S.of(context).statSpd,
                     ]
                         .map((header) => Expanded(
                                 child: my.TableHeader(
@@ -130,6 +142,29 @@ class StatsTable extends StatelessWidget {
               ),
             ),
           );
+  }
+
+  Row getTitleRow(BuildContext context, String labelStatsBy) {
+    return Row(
+      children: [
+        const SizedBox(width: 16),
+        Icon(
+          Icons.military_tech,
+          color: Colors.white.withAlpha(150),
+          size: 16,
+        ),
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+          alignment: Alignment.centerLeft,
+          child: Text(
+            S.of(context).statsTableTitleLabel(labelStatsBy),
+            style: TextStyle(
+              color: Colors.white.withAlpha(150),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   my.TableRow _showTableRow(CalculatedStats rowToShow) {

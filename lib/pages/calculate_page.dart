@@ -79,12 +79,17 @@ class _CalculatePageState extends State<CalculatePage> {
                           StatsTable(
                             statsToShow: state.calculateStatsBy(),
                             actualStats:
-                                state.calculationType == CalculationType.Stat
+                                state.calculationType == CalculationType.stat
                                     ? state.resultStats
                                         .map((e) => int.tryParse(e))
                                         .toList()
                                     : state.pkmStats,
                             calculationType: state.calculationType,
+                            isShowing: state.isShowingStatsByTable,
+                            onTogleShowing: () {
+                              state.setIsShowingStatsByTable(
+                                  !state.isShowingStatsByTable);
+                            },
                           ),
                         ]),
                       ),

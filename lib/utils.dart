@@ -1,5 +1,8 @@
+import 'package:pokemon_stats_calculator/state.dart';
+
 import 'data/pokemons.dart';
 import 'data/stats.dart';
+import 'generated/l10n.dart';
 
 List<String> getStats(int pkmId, int pkmLvl, int pkmNature, List<int?> pkmIVs,
     List<int?> pkmEVs) {
@@ -73,9 +76,9 @@ int calcStat(
   return result;
 }
 
-List<String> validateStats(int speciesId, int pkmLvl, int pkmNature,
+List<CError> validateStats(int speciesId, int pkmLvl, int pkmNature,
     List<int?> pkmStats, List<int?> pkmEvs) {
-  List<String> errors = [];
+  List<CError> errors = [];
   for (var i = 0; i < 6; i++) {
     if (pkmStats[i] == null) {
       continue;
@@ -83,12 +86,9 @@ List<String> validateStats(int speciesId, int pkmLvl, int pkmNature,
     var min = calcStat(speciesId, i, 0, pkmEvs[i] ?? 0, pkmLvl, pkmNature);
     var max = calcStat(speciesId, i, 31, pkmEvs[i] ?? 255, pkmLvl, pkmNature);
     if (pkmStats[i]! < min || pkmStats[i]! > max) {
-      errors.add("Invalid " +
-          statNames[i] +
-          " stat. Must be between " +
-          min.toString() +
-          " and " +
-          max.toString());
+      errors.add(CError((c) => S
+          .of(c)
+          .validationStatRange(statNames[i], min.toString(), max.toString())));
     }
   }
   return errors;
@@ -197,33 +197,33 @@ List<int> calcStativ(int speciesId, int statIndex, int statValue, int ev,
   return ivs;
 }
 
-List<String> validateIVs(List<int?> ivs) {
-  List<String> errors = [];
+List<CError> validateIVs(List<int?> ivs) {
+  List<CError> errors = [];
   for (var i = 0; i < 6; i++) {
     if (ivs[i] == null) {
       continue;
     }
     if (ivs[i]! < 0 || ivs[i]! > 31) {
-      errors.add("Invalid " + statNames[i] + " IV. Must be between 0 and 31");
+      errors.add(CError((c) => S.of(c).validationIVRange(statNames[i])));
     }
   }
   return errors;
 }
 
-List<String> validateEVs(List<int?> evs) {
-  List<String> errors = [];
+List<CError> validateEVs(List<int?> evs) {
+  List<CError> errors = [];
   int sum = 0;
   for (var i = 0; i < 6; i++) {
     if (evs[i] == null) {
       continue;
     }
     if (evs[i]! < 0 || evs[i]! > 255) {
-      errors.add("Invalid " + statNames[i] + " EV. Must be between 0 and 255");
+      errors.add(CError((c) => S.of(c).validationEVRange(statNames[i])));
     }
     sum += evs[i]!;
   }
   if (sum > 510) {
-    errors.add("Sum of all EVs must be less than 510");
+    errors.add(CError((c) => S.of(c).validationEVMax));
   }
   return errors;
 }

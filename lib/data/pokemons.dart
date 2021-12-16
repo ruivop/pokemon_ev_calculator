@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:pokemon_stats_calculator/data/stats.dart';
 
 class Species {
@@ -19,14 +18,6 @@ class Species {
     this.type1,
     this.type2,
   );
-
-  getType1Name() {
-    return types[type1];
-  }
-
-  getType2Name() {
-    return types[type1];
-  }
 
   getColorType1() {
     return typesColors[type1];

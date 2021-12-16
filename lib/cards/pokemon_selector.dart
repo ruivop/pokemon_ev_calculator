@@ -1,10 +1,7 @@
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:pokemon_stats_calculator/data/pokemons.dart';
-import 'package:provider/provider.dart';
-
-import '../state.dart';
+import 'package:pokemon_stats_calculator/generated/l10n.dart';
 
 class PokemonSearchPage extends StatefulWidget {
   final void Function(Species) onSelect;
@@ -45,11 +42,11 @@ class _PokemonSearchPageState extends State<PokemonSearchPage> {
                 maxLines: 1,
                 autofocus: true,
                 focusNode: searchFocusNode,
-                decoration: const InputDecoration(
-                  contentPadding: EdgeInsets.all(0.0),
-                  border: OutlineInputBorder(),
-                  hintText: 'Species Name or Number',
-                  prefixIcon: Icon(
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.all(0.0),
+                  border: const OutlineInputBorder(),
+                  hintText: S.of(context).pokemonSelectorTitle,
+                  prefixIcon: const Icon(
                     Icons.search,
                   ),
                 ),

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pokemon_stats_calculator/cards/table_card_elements.dart' as my;
 import 'package:pokemon_stats_calculator/data/stats.dart';
+import 'package:pokemon_stats_calculator/generated/l10n.dart';
 import 'package:pokemon_stats_calculator/reusable/card.dart';
 import 'package:provider/provider.dart';
 
@@ -57,7 +58,7 @@ class _EVTableSelectorState extends State<EVTableSelector> {
     bool isIV = false,
     bool isEv = false,
   }) {
-    var nonNullTye = type ?? CalculationType.Stat;
+    var nonNullTye = type ?? CalculationType.stat;
     if (i != 5) {
       if (isStats) {
         return statsFocusNodes[i + 1];
@@ -67,13 +68,13 @@ class _EVTableSelectorState extends State<EVTableSelector> {
         return evFocusNodes[i + 1];
       }
     } else {
-      if (nonNullTye == CalculationType.Stat) {
+      if (nonNullTye == CalculationType.stat) {
         if (isIV) {
           return evFocusNodes[0];
         } else {
           return emptyFocusNode;
         }
-      } else if (nonNullTye == CalculationType.IV) {
+      } else if (nonNullTye == CalculationType.iv) {
         if (isStats) {
           return evFocusNodes[0];
         } else {
@@ -108,7 +109,7 @@ class _EVTableSelectorState extends State<EVTableSelector> {
                 margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "Stats",
+                  S.of(context).tableSelectorTitle,
                   style: TextStyle(
                     color: Colors.white.withAlpha(150),
                   ),
@@ -164,7 +165,7 @@ class _EVTableSelectorState extends State<EVTableSelector> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 my.TableRow(
-                    tableTitle: "Nature Efect",
+                    tableTitle: S.of(context).tableSelectorNatureRow,
                     children: [
                       my.TableCell(
                         content: "",
@@ -187,7 +188,7 @@ class _EVTableSelectorState extends State<EVTableSelector> {
                         color: Colors.black.withAlpha(60)),
                     textColor: textColor),
                 my.TableRow(
-                    tableTitle: "Base Stats",
+                    tableTitle: S.of(context).tableSelectorBaseStatsRow,
                     children: [
                       ...state.selectedSpecies.baseStats
                           .map((statVal) => my.TableCell(
@@ -200,9 +201,9 @@ class _EVTableSelectorState extends State<EVTableSelector> {
                     mainDecoration: mainDecoration.copyWith(
                         color: Colors.black.withAlpha(60)),
                     textColor: textColor),
-                if (state.calculationType != CalculationType.Stat)
+                if (state.calculationType != CalculationType.stat)
                   my.TableRow(
-                      tableTitle: "Stats",
+                      tableTitle: S.of(context).tableSelectorStatsRow,
                       children: [
                         for (var i = 0; i < 6; i++)
                           my.TableCellEditable(
@@ -227,9 +228,9 @@ class _EVTableSelectorState extends State<EVTableSelector> {
                       mainDecoration: mainDecoration.copyWith(
                           color: Colors.black.withAlpha(60)),
                       textColor: textColor),
-                if (state.calculationType != CalculationType.IV)
+                if (state.calculationType != CalculationType.iv)
                   my.TableRow(
-                      tableTitle: "IVs",
+                      tableTitle: S.of(context).tableSelectorIVsRow,
                       children: [
                         for (var i = 0; i < 6; i++)
                           my.TableCellEditable(
@@ -252,9 +253,9 @@ class _EVTableSelectorState extends State<EVTableSelector> {
                       mainDecoration: mainDecoration.copyWith(
                           color: Colors.black.withAlpha(60)),
                       textColor: textColor),
-                if (state.calculationType != CalculationType.EV)
+                if (state.calculationType != CalculationType.ev)
                   my.TableRow(
-                      tableTitle: "EVs",
+                      tableTitle: S.of(context).tableSelectorEVsRow,
                       children: [
                         for (var i = 0; i < 6; i++)
                           my.TableCellEditable(
@@ -277,9 +278,9 @@ class _EVTableSelectorState extends State<EVTableSelector> {
                       mainDecoration: mainDecoration.copyWith(
                           color: Colors.black.withAlpha(60)),
                       textColor: textColor),
-                if (state.calculationType == CalculationType.EV)
+                if (state.calculationType == CalculationType.ev)
                   my.TableRow(
-                      tableTitle: "Result EVs",
+                      tableTitle: S.of(context).tableSelectorResultEVsRow,
                       children: [
                         ...state.resultEVs
                             .map((ep) => my.TableCell(
@@ -292,9 +293,9 @@ class _EVTableSelectorState extends State<EVTableSelector> {
                       mainDecoration: mainDecoration.copyWith(
                           color: Colors.black.withAlpha(60)),
                       textColor: textColor),
-                if (state.calculationType == CalculationType.IV)
+                if (state.calculationType == CalculationType.iv)
                   my.TableRow(
-                      tableTitle: "Result IVs",
+                      tableTitle: S.of(context).tableSelectorResultIVsRow,
                       children: [
                         ...state.resultIVs
                             .map((iv) => my.TableCell(
@@ -307,9 +308,9 @@ class _EVTableSelectorState extends State<EVTableSelector> {
                       mainDecoration: mainDecoration.copyWith(
                           color: Colors.black.withAlpha(60)),
                       textColor: textColor),
-                if (state.calculationType == CalculationType.Stat)
+                if (state.calculationType == CalculationType.stat)
                   my.TableRow(
-                      tableTitle: "Result Stats",
+                      tableTitle: S.of(context).tableSelectorResultStatsRow,
                       children: [
                         ...state.resultStats
                             .map((stat) => my.TableCell(

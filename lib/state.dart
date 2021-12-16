@@ -2,6 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:pokemon_stats_calculator/utils.dart';
 
 import 'data/pokemons.dart';
+import 'generated/l10n.dart';
+
+class CError {
+  String Function(BuildContext context) message;
+
+  CError(this.message);
+}
 
 class CalculationState extends ChangeNotifier {
   CalculationType? calculationType;
@@ -17,7 +24,9 @@ class CalculationState extends ChangeNotifier {
   late List<String> resultEVs;
   late List<String> resultStats;
 
-  late List<String> errors;
+  late List<CError> errors;
+
+  bool isShowingStatsByTable = false;
 
   CalculationState() {
     initializeValues();
@@ -34,6 +43,7 @@ class CalculationState extends ChangeNotifier {
     resultEVs = ["", "", "", "", "", ""];
     resultStats = ["", "", "", "", "", ""];
     errors = [];
+    isShowingStatsByTable = false;
     _calculate();
   }
 
@@ -73,11 +83,21 @@ class CalculationState extends ChangeNotifier {
     _calculate();
   }
 
-  _calculate() {
+  setIsShowingStatsByTable(bool newValue) {
+    isShowingStatsByTable = newValue;
+    _calculate();
+  }
+
+  Future<void> dummyAsync() async {
+    await Future.delayed(const Duration(milliseconds: 1));
+  }
+
+  _calculate() async {
     if (calculationType == null) return;
-    if (calculationType == CalculationType.EV) {
+    await dummyAsync();
+    if (calculationType == CalculationType.ev) {
       _calculateEvs();
-    } else if (calculationType == CalculationType.IV) {
+    } else if (calculationType == CalculationType.iv) {
       _calculateIvs();
     } else {
       _calculateStats();
@@ -87,13 +107,13 @@ class CalculationState extends ChangeNotifier {
   _calculateEvs() {
     errors.clear();
     if (pkmNature == null || pkmNature == 0) {
-      errors.add("Please select a nature.");
+      errors.add(CError((c) => S.of(c).validationNature));
     }
     if (pkmStats.any((stat) => stat == null)) {
-      errors.add("Please select all stats.");
+      errors.add(CError((c) => S.of(c).validationStats));
     }
     if (pkmIVs.any((iv) => iv == null)) {
-      errors.add("Please select all IVs.");
+      errors.add(CError((c) => S.of(c).validationIVs));
     }
 
     int natureToUse = pkmNature == null || pkmNature == 0 ? 1 : pkmNature!;
@@ -122,13 +142,13 @@ class CalculationState extends ChangeNotifier {
   _calculateIvs() {
     errors.clear();
     if (pkmNature == null || pkmNature == 0) {
-      errors.add("Please select a nature.");
+      errors.add(CError((c) => S.of(c).validationNature));
     }
     if (pkmStats.any((stat) => stat == null)) {
-      errors.add("Please select all stats.");
+      errors.add(CError((c) => S.of(c).validationStats));
     }
     if (pkmEVs.any((ev) => ev == null)) {
-      errors.add("Please select all EVs.");
+      errors.add(CError((c) => S.of(c).validationEVs));
     }
 
     int natureToUse = pkmNature == null || pkmNature == 0 ? 1 : pkmNature!;
@@ -155,13 +175,13 @@ class CalculationState extends ChangeNotifier {
   _calculateStats() {
     errors.clear();
     if (pkmNature == null || pkmNature == 0) {
-      errors.add("Please select a nature.");
+      errors.add(CError((c) => S.of(c).validationNature));
     }
     if (pkmIVs.any((iv) => iv == null)) {
-      errors.add("Please select all IVs.");
+      errors.add(CError((c) => S.of(c).validationIVs));
     }
     if (pkmEVs.any((ev) => ev == null)) {
-      errors.add("Please select all EVs.");
+      errors.add(CError((c) => S.of(c).validationEVs));
     }
 
     int natureToUse = pkmNature == null || pkmNature == 0 ? 1 : pkmNature!;
@@ -182,16 +202,16 @@ class CalculationState extends ChangeNotifier {
   List<CalculatedStats>? calculateStatsBy() {
     int natureToUse = pkmNature == null || pkmNature == 0 ? 1 : pkmNature!;
 
-    if (calculationType == CalculationType.Stat) {
+    if (calculationType == CalculationType.stat) {
       return calcStatsByLevel(
           selectedSpecies.id,
           pkmIVs.map((e) => e ?? 0).toList(),
           pkmEVs.map((e) => e ?? 0).toList(),
           natureToUse);
-    } else if (calculationType == CalculationType.IV) {
+    } else if (calculationType == CalculationType.iv) {
       return calcStatsByIv(selectedSpecies.id,
           pkmEVs.map((e) => e ?? 0).toList(), pkmLvl, natureToUse);
-    } else if (calculationType == CalculationType.EV) {
+    } else if (calculationType == CalculationType.ev) {
       return calcStatsByEv(selectedSpecies.id,
           pkmIVs.map((e) => e ?? 0).toList(), pkmLvl, natureToUse);
     } else {
@@ -201,7 +221,7 @@ class CalculationState extends ChangeNotifier {
 }
 
 enum CalculationType {
-  IV,
-  EV,
-  Stat,
+  iv,
+  ev,
+  stat,
 }

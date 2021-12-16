@@ -1,5 +1,6 @@
 //ATK/DEF/SP.ATK/SP.DEF/SPD / Bashful 1, Docile 2, Hardy 3, Serious 4, Quirky 5, Bold 6, Modest 7, Calm 8, Timid 9, Lonely 10, Mild 11, Gentle 12, Hasty 13, Adamant 14, Impish 15, Careful 16, Jolly 17, Naughty 18, Lax 19, Rash 20, Naive 21, Brave 22, Relaxed 23, Quiet 24, Sassy 25
 import 'package:flutter/material.dart';
+import 'package:pokemon_stats_calculator/generated/l10n.dart';
 
 List<List<double>> natures = [
   [],
@@ -29,38 +30,43 @@ List<List<double>> natures = [
   [1, 1, 1.1, 1, 0.9],
   [1, 1, 1, 1.1, 0.9]
 ];
-/*        natures[-1] = [1, 1, 1, 1, 1]; //neutral
-        natures['max'] = [1.1, 1.1, 1.1, 1.1, 1.1]; //all max
-        natures['min'] = [0.9, 0.9, 0.9, 0.9, 0.9]; //all max
-*/
-List<NatureName> natureNames = [
-  NatureName("", 0),
-  NatureName("Bashful", 1),
-  NatureName("Docile", 2),
-  NatureName("Hardy", 3),
-  NatureName("Serious", 4),
-  NatureName("Quirky", 5),
-  NatureName("Bold", 6),
-  NatureName("Modest", 7),
-  NatureName("Calm", 8),
-  NatureName("Timid", 9),
-  NatureName("Lonely", 10),
-  NatureName("Mild", 11),
-  NatureName("Gentle", 12),
-  NatureName("Hasty", 13),
-  NatureName("Adamant", 14),
-  NatureName("Impish", 15),
-  NatureName("Careful", 16),
-  NatureName("Jolly", 17),
-  NatureName("Naughty", 18),
-  NatureName("Lax", 19),
-  NatureName("Rash", 20),
-  NatureName("Naive", 21),
-  NatureName("Brave", 22),
-  NatureName("Relaxed", 23),
-  NatureName("Quiet", 24),
-  NatureName("Sassy", 25)
-]..sort((a, b) => a.name.compareTo(b.name));
+
+List<NatureName>? _calculatedNatureNames;
+List<NatureName> calculateNames(BuildContext context) {
+  _calculatedNatureNames ??= [
+    NatureName("", 0),
+    NatureName(S.of(context).natureBashful, 1),
+    NatureName(S.of(context).natureDocile, 2),
+    NatureName(S.of(context).natureHardy, 3),
+    NatureName(S.of(context).natureSerious, 4),
+    NatureName(S.of(context).natureQuirky, 5),
+    NatureName(S.of(context).natureBold, 6),
+    NatureName(S.of(context).natureModest, 7),
+    NatureName(S.of(context).natureCalm, 8),
+    NatureName(S.of(context).natureTimid, 9),
+    NatureName(S.of(context).natureLonely, 10),
+    NatureName(S.of(context).natureMild, 11),
+    NatureName(S.of(context).natureGentle, 12),
+    NatureName(S.of(context).natureHasty, 13),
+    NatureName(S.of(context).natureAdamant, 14),
+    NatureName(S.of(context).natureImpish, 15),
+    NatureName(S.of(context).natureCareful, 16),
+    NatureName(S.of(context).natureJolly, 17),
+    NatureName(S.of(context).natureNaughty, 18),
+    NatureName(S.of(context).natureLax, 19),
+    NatureName(S.of(context).natureRash, 20),
+    NatureName(S.of(context).natureNaive, 21),
+    NatureName(S.of(context).natureBrave, 22),
+    NatureName(S.of(context).natureRelaxed, 23),
+    NatureName(S.of(context).natureQuiet, 24),
+    NatureName(S.of(context).natureSassy, 25),
+  ]..sort((a, b) => a.name.compareTo(b.name));
+  return _calculatedNatureNames!;
+}
+
+List<NatureName> get natureNames {
+  return _calculatedNatureNames!;
+}
 
 class NatureName {
   String name;
@@ -71,29 +77,6 @@ class NatureName {
 String getNatureNameById(int id) {
   return natureNames.firstWhere((element) => element.id == id).name;
 }
-
-//DOES NOT INCLUDE FAIRY
-//Type affinity no fg fl po gu ro bu gh st ?? fi wa gs el ps ic dr da
-/*List<List<double>> damage = [
-  [1, 1, 1, 1, 1, 0.5, 1, 0, 0.5, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-  [2, 1, 0.5, 0.5, 1, 2, 0.5, 0, 2, 1, 1, 1, 1, 1, 0.5, 2, 1, 2],
-  [1, 2, 1, 1, 1, 0.5, 2, 1, 0.5, 1, 1, 1, 2, 0.5, 1, 1, 1, 1],
-  [1, 1, 1, 0.5, 0.5, 0.5, 1, 0.5, 0, 1, 1, 1, 2, 1, 1, 1, 1, 1],
-  [1, 1, 0, 2, 1, 2, 0.5, 1, 2, 1, 2, 1, 0.5, 2, 1, 1, 1, 1],
-  [1, 0.5, 2, 1, 0.5, 1, 2, 1, 0.5, 1, 2, 1, 1, 1, 1, 2, 1, 1],
-  [1, 0.5, 0.5, 0.5, 1, 1, 1, 0.5, 0.5, 1, 0.5, 1, 2, 1, 2, 1, 1, 2],
-  [0, 1, 1, 1, 1, 1, 1, 2, 0.5, 1, 1, 1, 1, 1, 2, 1, 1, 0.5],
-  [1, 1, 1, 1, 1, 2, 1, 1, 0.5, 1, 0.5, 0.5, 1, 0.5, 1, 2, 1, 1],
-  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-  [1, 1, 1, 1, 1, 0.5, 2, 1, 2, 1, 0.5, 0.5, 2, 1, 1, 2, 0.5, 1],
-  [1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 2, 0.5, 0.5, 1, 1, 1, 0.5, 1],
-  [1, 1, 0.5, 0.5, 2, 2, 0.5, 1, 0.5, 1, 0.5, 2, 0.5, 1, 1, 1, 0.5, 1],
-  [1, 1, 2, 1, 0, 1, 1, 1, 1, 1, 1, 2, 0.5, 0.5, 1, 1, 0.5, 1],
-  [1, 2, 1, 2, 1, 1, 1, 1, 0.5, 1, 1, 1, 1, 1, 0.5, 1, 1, 0],
-  [1, 1, 2, 1, 2, 1, 1, 1, 0.5, 1, 0.5, 0.5, 2, 1, 1, 0.5, 2, 1],
-  [1, 1, 1, 1, 1, 1, 1, 1, 0.5, 1, 1, 1, 1, 1, 1, 1, 2, 1],
-  [1, 0.5, 1, 1, 1, 1, 1, 2, 0.5, 1, 1, 1, 1, 1, 2, 1, 1, 0.5]
-];*/
 
 List<double> ivr = [
   0,
@@ -130,35 +113,22 @@ List<double> ivr = [
   31
 ];
 
-List<String> statNames = [
-  'HP',
-  'Attack',
-  'Defense',
-  'Sp.Attack',
-  'Sp.Defense',
-  'Speed',
-];
-List<String> types = [
-  'Normal',
-  'Fighting',
-  'Flying',
-  'Poison',
-  'Ground',
-  'Rock',
-  'Bug',
-  'Ghost',
-  'Steel',
-  '???',
-  'Fire',
-  'Water',
-  'Grass',
-  'Electric',
-  'Psychic',
-  'Ice',
-  'Dragon',
-  'Dark',
-  'Fairy'
-];
+List<String>? _computedStatNames;
+List<String> computeStatNames(BuildContext context) {
+  _computedStatNames ??= [
+    S.of(context).statFullHP,
+    S.of(context).statFullAtk,
+    S.of(context).statFullDef,
+    S.of(context).statFullSpA,
+    S.of(context).statFullSpD,
+    S.of(context).statFullSpd,
+  ];
+  return _computedStatNames!;
+}
+
+List<String> get statNames {
+  return _computedStatNames!;
+}
 
 List<Color> typesColors = const [
   Color(0xFFC6C6A7), //'Normal',
@@ -181,60 +151,3 @@ List<Color> typesColors = const [
   Color(0xFFA29288), //'Dark',
   Color(0xFFF4BDC9), //'Fairy'
 ];
-
-/*
-List<String> eggs = [
-  '???',
-  'Monster',
-  'Water1',
-  'Bug',
-  'Flying',
-  'Ground',
-  'Fairy',
-  'Plant',
-  'Humanshape',
-  'Water3',
-  'Mineral',
-  'Indeterminate',
-  'Water2',
-  'Ditto',
-  'Dragon',
-  'No Eggs'
-];
-List<String> typeshp = [
-  'Fighting',
-  'Flying',
-  'Poison',
-  'Ground',
-  'Rock',
-  'Bug',
-  'Ghost',
-  'Steel',
-  'Fire',
-  'Water',
-  'Grass',
-  'Electric',
-  'Psychic',
-  'Ice',
-  'Dragon',
-  'Dark'
-];
-List<String> hps = [
-  '0,1,2,3,4',
-  '5,6,7,8',
-  '9,10,11,12',
-  '13,14,15,16',
-  '17,18,19,20',
-  '21,22,23,24,25',
-  '26,27,28,29',
-  '30,31,32,33',
-  '34,35,36,37',
-  '38,39,40,41',
-  '42,43,44,45,46',
-  '47,48,49,50',
-  '51,52,53,54',
-  '55,56,57,58',
-  '59,60,61,62',
-  '63'
-]; //possible Hidden Power "types"
-*/

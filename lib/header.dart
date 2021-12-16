@@ -1,11 +1,10 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'cards/pokemon_selector.dart';
 import 'data/pokemons.dart';
-import 'state.dart';
+import 'generated/l10n.dart';
 
 class Header extends StatelessWidget {
   final void Function(Species) onSpeciesChange;
@@ -199,10 +198,10 @@ class ChoosingPokemonPageHeaderDelagate extends SliverPersistentHeaderDelegate {
                         showDialog(
                           context: context,
                           builder: (context) => AlertDialog(
-                            title: const SizedBox(
+                            title: SizedBox(
                               width: double.infinity,
-                              child:
-                                  Text('Options', textAlign: TextAlign.center),
+                              child: Text(S.of(context).headerOptions,
+                                  textAlign: TextAlign.center),
                             ),
                             actionsAlignment: MainAxisAlignment.center,
                             content: Column(
@@ -211,7 +210,8 @@ class ChoosingPokemonPageHeaderDelagate extends SliverPersistentHeaderDelegate {
                                 SizedBox(
                                   width: 100,
                                   child: OutlinedButton(
-                                    child: const Text('Clear'),
+                                    child:
+                                        Text(S.of(context).headerOptionsClear),
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                       onClear();
@@ -222,8 +222,8 @@ class ChoosingPokemonPageHeaderDelagate extends SliverPersistentHeaderDelegate {
                             ),
                             actions: [
                               OutlinedButton(
-                                child: const Text('Cancel',
-                                    style: TextStyle(color: Colors.red)),
+                                child: Text(S.of(context).headerOptionsCancel,
+                                    style: const TextStyle(color: Colors.red)),
                                 onPressed: () => Navigator.of(context).pop(),
                               ),
                             ],

@@ -1,12 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pokemon_stats_calculator/generated/l10n.dart';
 import 'package:pokemon_stats_calculator/reusable/card.dart';
-import 'package:provider/provider.dart';
-
-import '../state.dart';
+import 'package:pokemon_stats_calculator/state.dart';
 
 class ProblemsCard extends StatelessWidget {
-  final List<String> errors;
+  final List<CError> errors;
   const ProblemsCard({
     Key? key,
     required this.errors,
@@ -30,7 +29,7 @@ class ProblemsCard extends StatelessWidget {
                       const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "Problems",
+                    S.of(context).problemsTitle,
                     style: TextStyle(
                       color: Colors.white.withAlpha(150),
                     ),
@@ -45,7 +44,7 @@ class ProblemsCard extends StatelessWidget {
                   for (final error in errors)
                     ListTile(
                       title: Text(
-                        error,
+                        error.message(context),
                         style: const TextStyle(color: Colors.white),
                       ),
                       leading: const Icon(

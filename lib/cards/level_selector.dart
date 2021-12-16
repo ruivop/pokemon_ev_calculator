@@ -1,13 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:pokemon_stats_calculator/generated/l10n.dart';
 import 'package:pokemon_stats_calculator/reusable/card.dart';
-import 'package:provider/provider.dart';
-
-import '../state.dart';
 
 class LevelSelector extends StatefulWidget {
   final int nimLevel;
@@ -45,7 +42,7 @@ class _LevelSelectorState extends State<LevelSelector> {
               margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
               alignment: Alignment.centerLeft,
               child: Text(
-                "Select Level",
+                S.of(context).levelSelectorScreenTitle,
                 style: TextStyle(
                   color: Colors.white.withAlpha(150),
                 ),

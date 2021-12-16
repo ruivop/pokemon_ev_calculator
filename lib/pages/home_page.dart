@@ -1,6 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pokemon_stats_calculator/data/stats.dart';
+import 'package:pokemon_stats_calculator/generated/l10n.dart';
 import 'package:provider/provider.dart';
 
 import '../state.dart';
@@ -11,6 +13,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    calculateNames(context);
+    computeStatNames(context);
     return AnnotatedRegion(
       value: SystemUiOverlayStyle.light,
       child: Scaffold(
@@ -44,11 +48,11 @@ class HomePage extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: const Center(
+                child: Center(
                   child: Text(
-                    "IV, EV And Stat Calculator",
+                    S.of(context).appTitle,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w600,
                     ),
@@ -80,11 +84,11 @@ class HomePage extends StatelessWidget {
                           shrinkWrap: true,
                           children: [
                             HomePageButton(
-                              title: "Calculate EV",
+                              title: S.of(context).homePageCalculateEvButton,
                               onPressed: () {
                                 Provider.of<CalculationState>(context,
                                         listen: false)
-                                    .setCalculationType(CalculationType.EV);
+                                    .setCalculationType(CalculationType.ev);
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) => const CalculatePage(),
@@ -93,11 +97,11 @@ class HomePage extends StatelessWidget {
                               },
                             ),
                             HomePageButton(
-                              title: "Calculate IV",
+                              title: S.of(context).homePageCalculateIvButton,
                               onPressed: () {
                                 Provider.of<CalculationState>(context,
                                         listen: false)
-                                    .setCalculationType(CalculationType.IV);
+                                    .setCalculationType(CalculationType.iv);
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) => const CalculatePage(),
@@ -106,11 +110,11 @@ class HomePage extends StatelessWidget {
                               },
                             ),
                             HomePageButton(
-                              title: "Calculate Stats",
+                              title: S.of(context).homePageCalculateStatsButton,
                               onPressed: () {
                                 Provider.of<CalculationState>(context,
                                         listen: false)
-                                    .setCalculationType(CalculationType.Stat);
+                                    .setCalculationType(CalculationType.stat);
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) => const CalculatePage(),
@@ -143,9 +147,8 @@ class HomePage extends StatelessWidget {
                             ),
                           ],
                         ),
-                        child: const Text(
-                            '"Pokemon" is a trademark of "The Pokémon Company". This app is not affiliated with or endorsed by "The Pokémon Company".',
-                            style: TextStyle(
+                        child: Text(S.of(context).homepageDisclaimer,
+                            style: const TextStyle(
                                 fontWeight: FontWeight.w600,
                                 color: Colors.white)),
                       )))
@@ -190,108 +193,6 @@ class HomePageButton extends StatelessWidget {
           backgroundColor: Colors.white.withAlpha(220),
         ),
       ),
-    )
-        /*GestureDetector(
-        onTap: onPressed,
-        child: Container(
-          width: 200,
-          height: 180,
-          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-          padding: const EdgeInsets.all(3),
-          decoration: BoxDecoration(
-            color: Colors.orange[200],
-            gradient: const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color(0xffffcc80),
-                Color(0xffe0af65),
-              ],
-            ),
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x33000000),
-                blurRadius: 5,
-                offset: Offset(3, 3),
-              ),
-            ],
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.orange[100],
-              borderRadius: BorderRadius.circular(8),
-              gradient: const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(0xffffe0b2),
-                  Color(0xffe5c79a),
-                ],
-              ),
-              border: Border.all(
-                color: Colors.orange[400]!,
-                width: 2,
-              ),
-            ),
-            child: Center(
-                child: TitleStokeText(
-              text: title,
-              fontSize: 40,
-              strokeWidth: 4,
-              strokeColor: Color.lerp(Colors.orange[400]!, Colors.black, 0.2)!,
-            )),
-          ),
-        ),
-      ),*/
-        );
-  }
-}
-
-class TitleStokeText extends StatelessWidget {
-  final String text;
-  final double fontSize;
-  final Color color;
-  final Color strokeColor;
-  final double strokeWidth;
-  final TextAlign textAlign;
-
-  const TitleStokeText({
-    Key? key,
-    required this.text,
-    required this.fontSize,
-    this.color = Colors.white,
-    this.strokeColor = const Color(0xff928640),
-    this.strokeWidth = 2,
-    this.textAlign = TextAlign.center,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        // Stroked text as border.
-        AutoSizeText(
-          text,
-          textAlign: textAlign,
-          style: TextStyle(
-            fontSize: fontSize,
-            foreground: Paint()
-              ..style = PaintingStyle.stroke
-              ..strokeWidth = strokeWidth
-              ..color = strokeColor,
-          ),
-        ),
-        // Solid text as fill.
-        AutoSizeText(
-          text,
-          textAlign: textAlign,
-          style: TextStyle(
-            fontSize: fontSize,
-            color: color,
-          ),
-        ),
-      ],
-    );
+    ));
   }
 }
