@@ -77,7 +77,9 @@ class _CalculatePageState extends State<CalculatePage> {
                             errors: state.errors,
                           ),
                           StatsTable(
-                            statsToShow: state.calculateStatsBy(),
+                            statsToShow: state.isShowingStatsByTable
+                                ? state.calculateStatsBy()
+                                : null,
                             actualStats:
                                 state.calculationType == CalculationType.stat
                                     ? state.resultStats

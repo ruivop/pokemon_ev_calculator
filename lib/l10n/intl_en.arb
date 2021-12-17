@@ -4,6 +4,9 @@
     "homePageCalculateEvButton": "Calculate EV",
     "homePageCalculateIvButton": "Calculate IV",
     "homePageCalculateStatsButton": "Calculate Stats",
+    "homePageVersionInfo": "All the information on this app is related to the core version of the game for the consoles and the most recent Base Stats.",
+    "homePageCreateIssueButton": "Create an Issue",
+    "homePagePrivacyPolicy": "Privacy Policy",
     "homepageDisclaimer": "\"Pokemon\" is a trademark of \"The Pokémon Company\". This app is not affiliated with or endorsed by \"The Pokémon Company\".",
 
     "headerOptions": "Options",

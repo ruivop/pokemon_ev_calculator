@@ -46,6 +46,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Calculate IV"),
         "homePageCalculateStatsButton":
             MessageLookupByLibrary.simpleMessage("Calculate Stats"),
+        "homePageCreateIssueButton":
+            MessageLookupByLibrary.simpleMessage("Create an Issue"),
+        "homePagePrivacyPolicy":
+            MessageLookupByLibrary.simpleMessage("Privacy Policy"),
+        "homePageVersionInfo": MessageLookupByLibrary.simpleMessage(
+            "All the information on this app is related to the core version of the game for the consoles and the most recent Base Stats."),
         "homepageDisclaimer": MessageLookupByLibrary.simpleMessage(
             "\"Pokemon\" is a trademark of \"The Pokémon Company\". This app is not affiliated with or endorsed by \"The Pokémon Company\"."),
         "levelSelectorScreenTitle":

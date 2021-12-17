@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:pokemon_stats_calculator/data/stats.dart';
 import 'package:pokemon_stats_calculator/generated/l10n.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../state.dart';
 import 'calculate_page.dart';
@@ -43,8 +44,8 @@ class HomePage extends StatelessWidget {
                   boxShadow: [
                     BoxShadow(
                       color: Color(0x55000000),
-                      blurRadius: 3,
-                      offset: Offset(3, 3),
+                      spreadRadius: 2,
+                      offset: Offset(2, 3),
                     ),
                   ],
                 ),
@@ -62,101 +63,149 @@ class HomePage extends StatelessWidget {
               Expanded(
                   flex: 2,
                   child: Center(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 16),
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(vertical: 24),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF2a3560),
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color(0x55000000),
-                              blurRadius: 0,
-                              spreadRadius: 2,
-                              offset: Offset(5, 5),
-                            ),
-                          ],
-                        ),
-                        child: ListView(
-                          shrinkWrap: true,
-                          children: [
-                            HomePageButton(
-                              title: S.of(context).homePageCalculateEvButton,
-                              onPressed: () {
-                                Provider.of<CalculationState>(context,
-                                        listen: false)
-                                    .setCalculationType(CalculationType.ev);
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => const CalculatePage(),
-                                  ),
-                                );
-                              },
-                            ),
-                            HomePageButton(
-                              title: S.of(context).homePageCalculateIvButton,
-                              onPressed: () {
-                                Provider.of<CalculationState>(context,
-                                        listen: false)
-                                    .setCalculationType(CalculationType.iv);
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => const CalculatePage(),
-                                  ),
-                                );
-                              },
-                            ),
-                            HomePageButton(
-                              title: S.of(context).homePageCalculateStatsButton,
-                              onPressed: () {
-                                Provider.of<CalculationState>(context,
-                                        listen: false)
-                                    .setCalculationType(CalculationType.stat);
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => const CalculatePage(),
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
+                    child: HomePageCard(
+                      child: ListView(
+                        shrinkWrap: true,
+                        children: [
+                          HomePageButton(
+                            title: S.of(context).homePageCalculateEvButton,
+                            onPressed: () {
+                              Provider.of<CalculationState>(context,
+                                      listen: false)
+                                  .setCalculationType(CalculationType.ev);
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const CalculatePage(),
+                                ),
+                              );
+                            },
+                          ),
+                          HomePageButton(
+                            title: S.of(context).homePageCalculateIvButton,
+                            onPressed: () {
+                              Provider.of<CalculationState>(context,
+                                      listen: false)
+                                  .setCalculationType(CalculationType.iv);
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const CalculatePage(),
+                                ),
+                              );
+                            },
+                          ),
+                          HomePageButton(
+                            title: S.of(context).homePageCalculateStatsButton,
+                            onPressed: () {
+                              Provider.of<CalculationState>(context,
+                                      listen: false)
+                                  .setCalculationType(CalculationType.stat);
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const CalculatePage(),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   )),
-              Center(
-                  child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 16),
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 24, horizontal: 16),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF2a3560),
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color(0x55000000),
-                              blurRadius: 0,
-                              spreadRadius: 2,
-                              offset: Offset(5, 5),
+              HomePageCard(
+                verticalMargin: 0,
+                child: Text(S.of(context).homePageVersionInfo,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w600, color: Colors.white)),
+              ),
+              HomePageCard(
+                  verticalMargin: 8,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: OutlinedButton(
+                            onPressed: () {
+                              launch(
+                                  "https://github.com/ruivop/pokeStatsCalculator/issues");
+                            },
+                            child:
+                                Text(S.of(context).homePageCreateIssueButton),
+                            style: OutlinedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50.0),
+                              ),
+                              backgroundColor: Colors.white.withAlpha(220),
                             ),
-                          ],
+                          ),
                         ),
-                        child: Text(S.of(context).homepageDisclaimer,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white)),
-                      )))
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: OutlinedButton(
+                            onPressed: () {
+                              launch(
+                                  "http://pokestatscalculator.ruivop.com/privacy_policy/index.html");
+                            },
+                            child: Text(
+                              S.of(context).homePagePrivacyPolicy,
+                            ),
+                            style: OutlinedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50.0),
+                              ),
+                              backgroundColor: Colors.white.withAlpha(220),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )),
+              HomePageCard(
+                verticalMargin: 0,
+                child: Text(S.of(context).homepageDisclaimer,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w600, color: Colors.white)),
+              ),
+              const SizedBox(height: 16),
             ],
           ),
         ),
       )),
     );
+  }
+}
+
+class HomePageCard extends StatelessWidget {
+  final Widget child;
+  final double verticalMargin;
+  const HomePageCard({
+    Key? key,
+    required this.child,
+    this.verticalMargin = 16,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: verticalMargin),
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          decoration: BoxDecoration(
+            color: const Color(0xFF2a3560),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x55000000),
+                blurRadius: 0,
+                spreadRadius: 1,
+                offset: Offset(3, 3),
+              ),
+            ],
+          ),
+          child: child,
+        ));
   }
 }
 

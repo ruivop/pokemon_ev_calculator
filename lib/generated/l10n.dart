@@ -90,6 +90,36 @@ class S {
     );
   }
 
+  /// `All the information on this app is related to the core version of the game for the consoles and the most recent Base Stats.`
+  String get homePageVersionInfo {
+    return Intl.message(
+      'All the information on this app is related to the core version of the game for the consoles and the most recent Base Stats.',
+      name: 'homePageVersionInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create an Issue`
+  String get homePageCreateIssueButton {
+    return Intl.message(
+      'Create an Issue',
+      name: 'homePageCreateIssueButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Privacy Policy`
+  String get homePagePrivacyPolicy {
+    return Intl.message(
+      'Privacy Policy',
+      name: 'homePagePrivacyPolicy',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `"Pokemon" is a trademark of "The Pokémon Company". This app is not affiliated with or endorsed by "The Pokémon Company".`
   String get homepageDisclaimer {
     return Intl.message(
