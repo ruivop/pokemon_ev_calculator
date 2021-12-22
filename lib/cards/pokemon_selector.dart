@@ -52,7 +52,7 @@ class _PokemonSearchPageState extends State<PokemonSearchPage> {
           separatorBuilder: (context, index) => const Divider(),
           itemBuilder: (context, index) => ListTile(
             leading: SizedBox(
-                width: 25,
+                width: 30,
                 child: Center(child: Text(searchResults[index].number))),
             title: Text(searchResults[index].name),
             subtitle: searchResults[index].variantName == null
