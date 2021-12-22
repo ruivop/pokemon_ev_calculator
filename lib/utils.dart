@@ -237,3 +237,5 @@ class MException implements Exception {
     return message;
   }
 }
+
+bool isIos = true;

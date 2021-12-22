@@ -5,6 +5,7 @@ import 'package:pokemon_stats_calculator/data/pokemons.dart';
 import 'package:pokemon_stats_calculator/data/stats.dart';
 import 'package:pokemon_stats_calculator/generated/l10n.dart';
 import 'package:pokemon_stats_calculator/reusable/card.dart';
+import 'package:pokemon_stats_calculator/utils.dart';
 
 class NatureSelector extends StatelessWidget {
   final Species selectedPokemon;
@@ -108,16 +109,10 @@ class NatureSelectorPage extends StatelessWidget {
       S.of(context).statSpd
     ];
     var luminance = backgroundColor.computeLuminance();
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(S.of(context).natureSelectorScreenTitle),
-        backgroundColor: backgroundColor,
-        foregroundColor: luminance > 0.5 ? Colors.black : Colors.white,
-        systemOverlayStyle: luminance > 0.5
-            ? SystemUiOverlayStyle.dark
-            : SystemUiOverlayStyle.light,
-      ),
-      body: ListView.builder(
+    return getHeader(
+      context,
+      luminance,
+      ListView.builder(
         itemCount: natureNames.length,
         itemBuilder: (context, index) => Container(
           color: isSelected(index, natureIndex)
@@ -170,5 +165,34 @@ class NatureSelectorPage extends StatelessWidget {
   bool isSelected(int index, int? stateNatureIndex) {
     return (stateNatureIndex == null && index == 0) ||
         (stateNatureIndex != null && stateNatureIndex == natureNames[index].id);
+  }
+
+  getHeader(BuildContext context, double luminance, Widget child) {
+    return isIos
+        ? CupertinoTheme(
+            data: CupertinoThemeData(
+                brightness:
+                    luminance < 0.5 ? Brightness.dark : Brightness.light,
+                primaryColor: luminance > 0.5 ? Colors.black : Colors.white),
+            child: CupertinoPageScaffold(
+                navigationBar: CupertinoNavigationBar(
+                  middle: Text(S.of(context).natureSelectorScreenTitle),
+                  backgroundColor: backgroundColor,
+                  brightness:
+                      luminance < 0.5 ? Brightness.dark : Brightness.light,
+                ),
+                child: SafeArea(child: Material(child: child))),
+          )
+        : Scaffold(
+            appBar: AppBar(
+              title: Text(S.of(context).natureSelectorScreenTitle),
+              backgroundColor: backgroundColor,
+              foregroundColor: luminance > 0.5 ? Colors.black : Colors.white,
+              systemOverlayStyle: luminance > 0.5
+                  ? SystemUiOverlayStyle.dark
+                  : SystemUiOverlayStyle.light,
+            ),
+            body: child,
+          );
   }
 }

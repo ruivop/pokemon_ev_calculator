@@ -1,6 +1,8 @@
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pokemon_stats_calculator/utils.dart';
 
 import 'cards/pokemon_selector.dart';
 import 'data/pokemons.dart';
@@ -84,13 +86,15 @@ class ChoosingPokemonPageHeaderDelagate extends SliverPersistentHeaderDelegate {
             decoration: BoxDecoration(
               color: Color.lerp(
                   selectedSpecies.getColorType1(), Colors.white, 0.5),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 10,
-                  spreadRadius: 5,
-                ),
-              ],
+              boxShadow: isIos
+                  ? null
+                  : [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 10,
+                        spreadRadius: 5,
+                      ),
+                    ],
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,7 +103,9 @@ class ChoosingPokemonPageHeaderDelagate extends SliverPersistentHeaderDelegate {
                   height: 60,
                   child: Center(
                     child: IconButton(
-                      icon: const Icon(Icons.arrow_back),
+                      icon: isIos
+                          ? const Icon(CupertinoIcons.back, size: 30)
+                          : const Icon(Icons.arrow_back),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                   ),
@@ -195,40 +201,7 @@ class ChoosingPokemonPageHeaderDelagate extends SliverPersistentHeaderDelegate {
                     child: IconButton(
                       icon: const Icon(Icons.more_vert),
                       onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: SizedBox(
-                              width: double.infinity,
-                              child: Text(S.of(context).headerOptions,
-                                  textAlign: TextAlign.center),
-                            ),
-                            actionsAlignment: MainAxisAlignment.center,
-                            content: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                SizedBox(
-                                  width: 100,
-                                  child: OutlinedButton(
-                                    child:
-                                        Text(S.of(context).headerOptionsClear),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                      onClear();
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                            actions: [
-                              OutlinedButton(
-                                child: Text(S.of(context).headerOptionsCancel,
-                                    style: const TextStyle(color: Colors.red)),
-                                onPressed: () => Navigator.of(context).pop(),
-                              ),
-                            ],
-                          ),
-                        );
+                        showClearDialog(context);
                       },
                     ),
                   ),
@@ -286,5 +259,65 @@ class ChoosingPokemonPageHeaderDelagate extends SliverPersistentHeaderDelegate {
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
     return true;
+  }
+
+  showClearDialog(BuildContext context) {
+    if (isIos) {
+      return showCupertinoModalPopup(
+          context: context,
+          builder: (context) => CupertinoActionSheet(
+                title: Text(S.of(context).headerOptions),
+                actions: [
+                  CupertinoActionSheetAction(
+                    child: Text(S.of(context).headerOptionsClear),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      onClear();
+                    },
+                  ),
+                ],
+                cancelButton: CupertinoActionSheetAction(
+                  isDestructiveAction: true,
+                  child: Text(S.of(context).headerOptionsCancel),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ));
+    } else {
+      return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: SizedBox(
+            width: double.infinity,
+            child:
+                Text(S.of(context).headerOptions, textAlign: TextAlign.center),
+          ),
+          actionsAlignment: MainAxisAlignment.center,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                width: 100,
+                child: OutlinedButton(
+                  child: Text(S.of(context).headerOptionsClear),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    onClear();
+                  },
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            OutlinedButton(
+              child: Text(S.of(context).headerOptionsCancel,
+                  style: const TextStyle(color: Colors.red)),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        ),
+      );
+    }
   }
 }
